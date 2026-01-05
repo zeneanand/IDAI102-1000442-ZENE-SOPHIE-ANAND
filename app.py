@@ -69,7 +69,7 @@ with st.sidebar:
     st.header("📝 Log Purchase")
     p_name = st.text_input("Product Type (Type here)", placeholder="e.g., Sneakers")
     p_brand = st.text_input("Brand", placeholder="e.g., EcoStyle")
-    p_price = st.number_input("Price ($)", min_value=0.0, step=1.0)
+    p_price = st.number_input("Price (Rs)", min_value=0.0, step=1.0)
     
     if st.button("Add to Dashboard"):
         if p_name:
