@@ -10,7 +10,7 @@ st.markdown("""
     <style>
     .main { background-color: #F1F8E9; }
     .stButton>button { background-color: #2E7D32; color: white; border-radius: 12px; font-weight: bold; }
-    h1, h2, h3 { color: #1B5E20; font-family: 'Segoe UI', sans-serif; }
+    h1, h2, h3 { color: white; font-family: 'Segoe UI', sans-serif; }
     .stMetric { background-color: #FFFFFF; padding: 15px; border-radius: 10px; border: 1px solid #C8E6C9; }
     </style>
     """, unsafe_allow_html=True)
