@@ -141,6 +141,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 **Project Lead:** Your Name / ShopImpact Ltd.
 
-**Project Link:** [https://github.com/yourusername/shop-impact-dashboard](https://www.google.com/search?q=https://github.com/yourusername/shop-impact-dashboard)
+**Project Link:** [https://github.com/yourusername/shop-impact-dashboard](https://idai102-1000442-zene-sophie-anand-dxqlgjrqxrw3kpekeefygd.streamlit.app/)
 
 ---
