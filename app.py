@@ -278,31 +278,30 @@ with c1:
         brand = st.text_input("Brand", "Generic")
         
         if st.button("🚀 Calculate Impact"):
-            co2 = price * IMPACT_MULTIPLIERS[prod]
+            co2_val = price * IMPACT_MULTIPLIERS[prod]
             multiplier = IMPACT_MULTIPLIERS[prod]
             
             # Record Purchase
             st.session_state.purchases.append({
                 "date": datetime.now().strftime("%H:%M"),
-                "product": prod, "price": price, "co2": co2
+                "product": prod, "price": price, "co2": co2_val
             })
-            st.session_state.total_co2 += co2
+            st.session_state.total_co2 += co2_val
             
             # --- BADGE UNLOCK LOGIC ---
             new_badge = None
             
-            # Badge 1: First Eco Choice (Low multiplier)
+            # Badge 1: First Eco Choice
             if multiplier <= 0.1:
-                # check if badge exists
                 if not any(b['name'] == 'Eco Starter' for b in st.session_state.badges):
                     new_badge = {"name": "Eco Starter", "icon": "🌱"}
             
-            # Badge 2: Thrift King (Buying second hand)
+            # Badge 2: Thrift King
             if prod == "Thrift/Second-hand":
                 if not any(b['name'] == 'Thrift King' for b in st.session_state.badges):
                     new_badge = {"name": "Thrift King", "icon": "👑"}
             
-            # Badge 3: Big Spender but Green (Expensive item but low impact)
+            # Badge 3: Green Investor
             if price > 50 and multiplier <= 0.1:
                 if not any(b['name'] == 'Green Investor' for b in st.session_state.badges):
                     new_badge = {"name": "Green Investor", "icon": "💎"}
@@ -311,20 +310,23 @@ with c1:
                 st.session_state.badges.append(new_badge)
                 st.balloons() # CELEBRATION!
                 st.toast(f"🎉 New Badge Unlocked: {new_badge['name']}!", icon=new_badge['icon'])
-                st.session_state.animation_trigger = "badge" # Draw badge
+                st.session_state.animation_trigger = "badge" 
             
             elif multiplier < 0.2:
                 st.session_state.animation_trigger = "leaf"
             else:
                 st.session_state.animation_trigger = "footprint"
             
-            time.sleep(0.5) # Allow UI to refresh
+            time.sleep(0.5) 
             st.rerun()
 
     # --- RECOMMENDATIONS & TIPS ---
     st.markdown("<br>", unsafe_allow_html=True)
+    # FIX: Get last CO2 value safely from session state
     if st.session_state.animation_trigger == "footprint" and prod in GREEN_ALTERNATIVES:
-        st.error(f"🛑 High Impact Detected! ({co2:.1f}kg CO₂)")
+        # Retrieve the most recent CO2 value from the last purchase in the list
+        last_co2 = st.session_state.purchases[-1]['co2'] if st.session_state.purchases else 0
+        st.error(f"🛑 High Impact Detected! ({last_co2:.1f}kg CO₂)")
         st.markdown(f"**Try these instead:** {', '.join(GREEN_ALTERNATIVES[prod])}")
     
     st.markdown(f"""
@@ -362,5 +364,6 @@ if st.session_state.purchases:
         
     with tab2:
         st.dataframe(chart_data, use_container_width=True)
+        
 
 
