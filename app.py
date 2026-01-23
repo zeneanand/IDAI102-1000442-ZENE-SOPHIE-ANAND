@@ -14,7 +14,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- VIBRANT CSS STYLING ---
+# --- HIGH CONTRAST & VIBRANT CSS ---
 st.markdown("""
     <style>
     /* Main Background - Soft Mint */
@@ -22,59 +22,96 @@ st.markdown("""
         background: linear-gradient(to bottom right, #e0f7fa, #e8f5e9);
     }
     
-    /* Headers - Ocean Blue */
+    /* GLOBAL TEXT COLOR - Dark Midnight Green */
+    html, body, [class*="css"] {
+        color: #102A2E; 
+        font-family: 'Verdana', sans-serif;
+    }
+
+    /* HEADERS - Very Dark Teal */
     h1 {
-        color: #006064;
-        font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif; /* Playful font */
-        text-shadow: 2px 2px #b2dfdb;
+        color: #004D40 !important;
+        font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+        text-shadow: 1px 1px #80cbc4;
     }
-    h2, h3 {
-        color: #00796b;
+    h2, h3, h4 {
+        color: #00695c !important;
+        font-weight: 800;
     }
 
-    /* Custom Cards for Metrics */
+    /* INPUT LABELS - Make them bold and dark */
+    .stSelectbox label, .stNumberInput label, .stTextInput label {
+        color: #00251a !important;
+        font-size: 16px !important;
+        font-weight: bold !important;
+    }
+
+    /* METRICS - Dark Burnt Orange */
     div[data-testid="stMetricValue"] {
-        font-size: 2rem;
-        color: #ef6c00; /* Vibrant Orange */
+        font-size: 2.2rem;
+        color: #bf360c !important; 
+        font-weight: 900;
+    }
+    div[data-testid="stMetricLabel"] {
+        color: #37474f !important;
+        font-weight: bold;
     }
 
-    /* Buttons - Sunny Yellow & Rounded */
+    /* BUTTONS - High Contrast Yellow */
     .stButton>button {
         background-color: #fdd835;
-        color: #3e2723;
+        color: #000000;
         border-radius: 20px;
-        border: 2px solid #fbc02d;
-        font-weight: bold;
-        font-size: 16px;
+        border: 2px solid #f9a825;
+        font-weight: 900;
+        font-size: 18px;
         transition: all 0.3s ease;
     }
     .stButton>button:hover {
         background-color: #ffeb3b;
         transform: scale(1.05);
+        border-color: #000;
     }
 
-    /* Badge Cards */
+    /* BADGE CARDS - Darker Text */
     .badge-card {
         background-color: #ffffff;
         border-left: 10px solid;
         padding: 15px;
         border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
         text-align: center;
         margin-bottom: 10px;
+        color: #212121;
     }
-    .badge-green { border-color: #4caf50; color: #2e7d32; }
-    .badge-gold { border-color: #ffb300; color: #ef6c00; }
-    .badge-red { border-color: #c62828; color: #c62828; }
+    .badge-green { border-color: #2e7d32; }
+    .badge-gold { border-color: #ff8f00; }
+    .badge-red { border-color: #c62828; }
 
-    /* Tip Box */
+    /* TROPHY CASE STYLE */
+    .trophy-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+    .trophy-item {
+        background-color: #fff9c4; /* Light Yellow */
+        border: 2px solid #fbc02d;
+        border-radius: 10px;
+        padding: 10px;
+        text-align: center;
+        font-weight: bold;
+        color: #f57f17;
+    }
+    
+    /* TIP BOX - High Visibility */
     .tip-box {
         background-color: #e1f5fe;
-        border: 2px dashed #0288d1;
+        border: 2px dashed #01579b;
         border-radius: 15px;
         padding: 15px;
-        color: #01579b;
-        font-style: italic;
+        color: #0d47a1;
+        font-weight: 600;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -109,6 +146,8 @@ if 'total_co2' not in st.session_state:
     st.session_state.total_co2 = 0.0
 if 'animation_trigger' not in st.session_state:
     st.session_state.animation_trigger = None
+if 'badges' not in st.session_state:
+    st.session_state.badges = []
 
 # --- ANIMATED TURTLE ENGINE ---
 def animate_turtle(drawing_type):
@@ -119,7 +158,7 @@ def animate_turtle(drawing_type):
     fig, ax = plt.subplots(figsize=(4, 4))
     ax.set_aspect('equal')
     ax.axis('off')
-    fig.patch.set_facecolor('#e0f7fa') # Match background
+    fig.patch.set_facecolor('#e0f7fa') 
     
     t = np.linspace(0, 2*np.pi, 100)
     
@@ -127,16 +166,15 @@ def animate_turtle(drawing_type):
     if drawing_type == "leaf":
         x_data = 16 * np.sin(t)**3
         y_data = (13 * np.cos(t) - 5 * np.cos(2*t) - 2 * np.cos(3*t) - np.cos(4*t)) * 1.2
-        color = '#43a047' # Green
+        color = '#1b5e20' # Darker Green
         fill_color = '#a5d6a7'
         msg = "Eco Hero!"
         icon = "🌿"
         
     elif drawing_type == "footprint":
-        # Ellipse approximation
         x_data = 0.5 * np.cos(t)
         y_data = 1.0 * np.sin(t)
-        color = '#d32f2f' # Red
+        color = '#b71c1c' # Darker Red
         fill_color = '#ef9a9a'
         msg = "High Impact"
         icon = "👣"
@@ -144,35 +182,55 @@ def animate_turtle(drawing_type):
     else: # Badge
         x_data = np.cos(t * 5) * 5
         y_data = np.sin(t * 5) * 5
-        color = '#fbc02d' # Gold
+        color = '#ff6f00' # Dark Amber
         fill_color = '#fff59d'
-        msg = "Badge Earned"
-        icon = "⭐"
+        msg = "Badge Unlocked!"
+        icon = "🏆"
 
     # ANIMATION LOOP
-    # We draw the line in segments to look like a turtle moving
     for i in range(1, 101, 5):
         ax.clear()
         ax.set_aspect('equal')
         ax.axis('off')
-        
-        # Draw the partial line
         ax.plot(x_data[:i], y_data[:i], color=color, linewidth=3)
-        
-        # Draw the "Turtle" head at the current point
-        ax.scatter(x_data[i-1], y_data[i-1], color=color, s=100, marker='o') 
-        
-        # Render frame
+        ax.scatter(x_data[i-1], y_data[i-1], color=color, s=120, marker='o') 
         placeholder.pyplot(fig, use_container_width=False)
-        time.sleep(0.01) # Speed of drawing
+        time.sleep(0.01) 
 
     # Final filled state
     ax.clear()
     ax.axis('off')
     ax.fill(x_data, y_data, color=fill_color, alpha=0.6)
     ax.plot(x_data, y_data, color=color, linewidth=3)
-    ax.text(0, 0, f"{icon}\n{msg}", ha='center', va='center', fontsize=12, fontweight='bold', color='#37474f')
+    ax.text(0, 0, f"{icon}\n{msg}", ha='center', va='center', fontsize=14, fontweight='bold', color='#263238')
     placeholder.pyplot(fig, use_container_width=False)
+
+# --- SIDEBAR TROPHY CASE ---
+with st.sidebar:
+    st.header("🏆 Your Trophy Case")
+    st.markdown("Collect badges by making eco-friendly choices!")
+    
+    if len(st.session_state.badges) > 0:
+        # Display badges in a grid
+        cols = st.columns(2)
+        for i, badge in enumerate(st.session_state.badges):
+            with cols[i % 2]:
+                st.markdown(f"""
+                <div class="trophy-item">
+                    <div style="font-size:30px;">{badge['icon']}</div>
+                    {badge['name']}
+                </div>
+                """, unsafe_allow_html=True)
+    else:
+        st.info("No badges yet. Start shopping sustainably!")
+        
+    st.markdown("---")
+    st.write("**Reset App:**")
+    if st.button("Reset Everything"):
+        st.session_state.purchases = []
+        st.session_state.total_co2 = 0.0
+        st.session_state.badges = []
+        st.rerun()
 
 # --- MAIN APP LAYOUT ---
 
@@ -190,7 +248,7 @@ if st.session_state.purchases:
     with col_b:
         st.metric("☁️ Total CO₂", f"{st.session_state.total_co2:.1f} kg")
     with col_c:
-        # Dynamic Badge Logic
+        # Dynamic Level Badge
         if avg_co2 < 5:
             b_class, b_name, b_icon = "badge-green", "Eco Warrior", "🌿"
         elif avg_co2 < 15:
@@ -200,8 +258,8 @@ if st.session_state.purchases:
             
         st.markdown(f"""
         <div class="badge-card {b_class}">
-            <h3>{b_icon} Level</h3>
-            {b_name}
+            <h3 style="color:#000; margin:0;">{b_icon} Level</h3>
+            <p style="font-weight:bold; font-size:18px; margin:0;">{b_name}</p>
         </div>
         """, unsafe_allow_html=True)
 else:
@@ -221,17 +279,46 @@ with c1:
         
         if st.button("🚀 Calculate Impact"):
             co2 = price * IMPACT_MULTIPLIERS[prod]
+            multiplier = IMPACT_MULTIPLIERS[prod]
+            
+            # Record Purchase
             st.session_state.purchases.append({
                 "date": datetime.now().strftime("%H:%M"),
                 "product": prod, "price": price, "co2": co2
             })
             st.session_state.total_co2 += co2
             
-            # Set trigger for animation
-            if IMPACT_MULTIPLIERS[prod] < 0.2:
+            # --- BADGE UNLOCK LOGIC ---
+            new_badge = None
+            
+            # Badge 1: First Eco Choice (Low multiplier)
+            if multiplier <= 0.1:
+                # check if badge exists
+                if not any(b['name'] == 'Eco Starter' for b in st.session_state.badges):
+                    new_badge = {"name": "Eco Starter", "icon": "🌱"}
+            
+            # Badge 2: Thrift King (Buying second hand)
+            if prod == "Thrift/Second-hand":
+                if not any(b['name'] == 'Thrift King' for b in st.session_state.badges):
+                    new_badge = {"name": "Thrift King", "icon": "👑"}
+            
+            # Badge 3: Big Spender but Green (Expensive item but low impact)
+            if price > 50 and multiplier <= 0.1:
+                if not any(b['name'] == 'Green Investor' for b in st.session_state.badges):
+                    new_badge = {"name": "Green Investor", "icon": "💎"}
+
+            if new_badge:
+                st.session_state.badges.append(new_badge)
+                st.balloons() # CELEBRATION!
+                st.toast(f"🎉 New Badge Unlocked: {new_badge['name']}!", icon=new_badge['icon'])
+                st.session_state.animation_trigger = "badge" # Draw badge
+            
+            elif multiplier < 0.2:
                 st.session_state.animation_trigger = "leaf"
             else:
                 st.session_state.animation_trigger = "footprint"
+            
+            time.sleep(0.5) # Allow UI to refresh
             st.rerun()
 
     # --- RECOMMENDATIONS & TIPS ---
@@ -256,9 +343,9 @@ with c2:
     else:
         # Static placeholder when idle
         st.markdown("""
-        <div style="text-align:center; padding: 50px; border: 2px dashed #b2dfdb; border-radius: 20px;">
+        <div style="text-align:center; padding: 50px; border: 3px dashed #00695c; border-radius: 20px; background-color: rgba(255,255,255,0.5);">
             <h1 style="font-size: 50px;">🐢</h1>
-            <p>I'm waiting to draw your impact!</p>
+            <p style="font-weight:bold; font-size:18px;">I'm waiting to draw your impact!</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -271,8 +358,9 @@ if st.session_state.purchases:
     tab1, tab2 = st.tabs(["📉 CO₂ Trend", "📋 Purchase History"])
     
     with tab1:
-        st.area_chart(chart_data.reset_index(), x='index', y='co2', color="#009688")
+        st.area_chart(chart_data.reset_index(), x='index', y='co2', color="#004d40")
         
     with tab2:
         st.dataframe(chart_data, use_container_width=True)
+
 
