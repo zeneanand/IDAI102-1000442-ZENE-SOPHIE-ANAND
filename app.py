@@ -1,141 +1,272 @@
-import streamlit as st
+            import streamlit as st
 import pandas as pd
-import datetime
+import random
+import matplotlib.pyplot as plt
+import numpy as np
+from datetime import datetime
 
-# --- STAGE 1: PROFESSIONAL UI DESIGN ---
-st.set_page_config(page_title="ShopImpact Dashboard", layout="wide")
+# --- CONFIGURATION & STYLING ---
+st.set_page_config(
+    page_title="ShopImpact",
+    page_icon="🌿",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
-# Custom CSS for high-visibility metrics and "earthy" professional theme
+# Custom CSS for Earthy Tones and "Friendly" UI
 st.markdown("""
     <style>
-    /* Background and global fonts */
-    .main { background-color: #f8f9fa; }
-    h1, h2, h3 { color: #1b5e20 !important; font-family: 'Inter', sans-serif; }
-    
-    /* Highlighted Metric Card */
-    .metric-card {
-        background-color: #ffffff;
-        border: 2px solid #e0e0e0;
-        padding: 25px;
+    /* Main Background */
+    .stApp {
+        background-color: #Fdfcf5; /* Cream/Beige */
+    }
+    /* Headers */
+    h1, h2, h3 {
+        color: #264653; /* Dark Blue-Green */
+        font-family: 'Helvetica Neue', sans-serif;
+    }
+    /* Metrics */
+    div[data-testid="stMetricValue"] {
+        color: #2A9D8F; /* Earthy Green */
+    }
+    /* Buttons */
+    .stButton>button {
+        background-color: #E9C46A; /* Earthy Yellow */
+        color: #264653;
+        border-radius: 10px;
+        border: none;
+        font-weight: bold;
+    }
+    .stButton>button:hover {
+        background-color: #F4A261; /* Burnt Orange */
+    }
+    /* Custom Badge Box */
+    .badge-box {
+        padding: 20px;
+        background-color: #2A9D8F;
+        color: white;
         border-radius: 15px;
         text-align: center;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        margin-bottom: 25px;
-    }
-    .metric-value {
-        font-size: 56px !important;
-        font-weight: 800;
-        color: #d32f2f;
-    }
-    .metric-label {
-        font-size: 18px;
-        color: #616161;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-    }
-    
-    /* Sidebar Styling */
-    .css-1d391kg { background-color: #e8f5e9; }
-    .stButton>button {
-        background-color: #2e7d32;
-        color: white;
-        width: 100%;
-        border-radius: 8px;
-        height: 3em;
-        font-size: 16px;
+        font-size: 20px;
+        font-weight: bold;
+        box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
     }
     </style>
     """, unsafe_allow_html=True)
 
-# --- STAGE 2: DATA LOGIC ---
-IMPACT_DATABASE = {
-    "leather shoes": 15.2,
-    "sneakers": 8.5,
-    "cotton t-shirt": 6.0,
-    "organic shirt": 2.1,
-    "plastic bottle": 0.5,
-    "beef": 27.0
+# --- DATA & LOGIC ---
+
+# Impact Logic: Multiplier represents kg CO2e per $ spent (Simplified estimation)
+IMPACT_MULTIPLIERS = {
+    "Fast Fashion Clothing": 0.5,
+    "Sustainable Clothing": 0.1,
+    "Electronics": 0.3,
+    "Leather Goods": 0.8,
+    "Second-hand/Thrift": 0.05,
+    "Local Produce": 0.1,
+    "Imported Processed Food": 0.4,
+    "Plastic Home Goods": 0.6,
+    "Bamboo/Wooden Goods": 0.15
 }
-DEFAULT_IMPACT = 5.0 
 
-if 'purchase_history' not in st.session_state:
-    st.session_state.purchase_history = []
+GREEN_ALTERNATIVES = {
+    "Fast Fashion Clothing": ["Patagonia", "ThredUp", "Local Thrift Stores", "Organic Cotton Brands"],
+    "Electronics": ["Back Market (Refurbished)", "Fairphone", "Keep current device longer"],
+    "Leather Goods": ["Pinatex (Pineapple Leather)", "Cork Leather", "Recycled Canvas"],
+    "Imported Processed Food": ["Local Farmers Market", "Seasonal Veggies", "Bulk Stores"],
+    "Plastic Home Goods": ["Glass Containers", "Bamboo Utensils", "Stainless Steel"],
+}
 
-# --- STAGE 3: INTERACTIVE SIDEBAR ---
-st.title("🌱 ShopImpact")
-st.markdown("### Transform everyday shopping into a mindful, eco-conscious experience.")
+ECO_TIPS = [
+    "Did you know bamboo grows 10x faster than trees and absorbs more CO2?",
+    "Buying second-hand reduces a product's carbon footprint by up to 80%.",
+    "Washing clothes in cold water saves 90% of the energy used by washing machines.",
+    "Every $1 spent on local produce keeps money in your community and cuts transport emissions."
+]
 
-with st.sidebar:
-    st.header("📝 Log Purchase")
-    p_name = st.text_input("Product Type (Type here)", placeholder="e.g., Sneakers")
-    p_brand = st.text_input("Brand", placeholder="e.g., EcoStyle")
-    p_price = st.number_input("Price (Rs)", min_value=0.0, step=1.0)
+QUOTES = [
+    "“The greatest threat to our planet is the belief that someone else will save it.” – Robert Swan",
+    "“Buy less, choose well, make it last.” – Vivienne Westwood",
+    "“Sustainability is not a goal to be reached but a way of thinking.”"
+]
+
+# Initialize Session State
+if 'purchases' not in st.session_state:
+    st.session_state.purchases = []
+if 'total_co2' not in st.session_state:
+    st.session_state.total_co2 = 0.0
+if 'last_action' not in st.session_state:
+    st.session_state.last_action = None
+
+# --- VIRTUAL TURTLE ENGINE (Matplotlib) ---
+def draw_virtual_turtle(drawing_type):
+    """
+    Simulates a turtle drawing using Matplotlib to ensure it works on web browsers.
+    """
+    fig, ax = plt.subplots(figsize=(4, 4))
+    ax.set_aspect('equal')
+    ax.axis('off')
     
-    if st.button("Add to Dashboard"):
-        if p_name:
-            lookup = p_name.lower().strip()
-            multiplier = IMPACT_DATABASE.get(lookup, DEFAULT_IMPACT)
-            # CO2 Calculation logic 
-            co2_val = multiplier * (p_price / 10 if p_price > 0 else 1)
-            
-            st.session_state.purchase_history.append({
-                "Date": datetime.date.today().strftime("%Y-%m-%d"),
-                "Product": p_name.title(),
-                "Brand": p_brand,
-                "Price": p_price,
-                "CO2_kg": round(co2_val, 2)
-            })
-            st.toast(f"Logged {p_name}!", icon="🍃")
+    # Set canvas color to transparent/beige
+    fig.patch.set_facecolor('#Fdfcf5')
+    
+    t = np.linspace(0, 2*np.pi, 100)
+    
+    if drawing_type == "leaf":
+        # Draw a Leaf
+        x = 16 * np.sin(t)**3
+        y = 13 * np.cos(t) - 5 * np.cos(2*t) - 2 * np.cos(3*t) - np.cos(4*t) 
+        # Modify heart shape to look more leaf-like by stretching
+        y = y * 1.2
+        ax.fill(x, y, color='#2A9D8F', alpha=0.6)
+        ax.plot(x, y, color='#264653', linewidth=2)
+        ax.text(0, -5, "Eco Choice!", ha='center', color='white', fontweight='bold')
+        
+    elif drawing_type == "footprint":
+        # Draw a Footprint (High Carbon)
+        # Main foot
+        ellipse = plt.Circle((0, 0), 0.5, color='#E76F51', alpha=0.7)
+        ax.add_patch(ellipse)
+        ax.set_xlim(-1, 1)
+        ax.set_ylim(-1, 2)
+        # Toes
+        for i in range(5):
+            toe = plt.Circle(((-0.3 + i*0.15), 0.7 + abs(i-2)*0.05), 0.08, color='#E76F51')
+            ax.add_patch(toe)
+        ax.text(0, -0.8, "High Impact", ha='center', color='#264653', fontweight='bold')
+        
+    elif drawing_type == "badge":
+        # Draw a Star Badge
+        x = np.cos(t * 5) * 5
+        y = np.sin(t * 5) * 5
+        ax.fill(x, y, color='#E9C46A', alpha=0.8)
+        ax.plot(x, y, color='#F4A261', linewidth=3)
+        ax.text(0, 0, "ECO\nSAVER", ha='center', va='center', color='#264653', fontweight='bold')
+
+    return fig
+
+# --- MAIN APP LAYOUT ---
+
+st.title("🌿 ShopImpact")
+st.markdown("### Your Mindful Shopping Companion")
+st.markdown("---")
+
+# Layout: 2 Columns (Input vs Visualization)
+col1, col2 = st.columns([1, 1.5])
+
+# --- LEFT COLUMN: INPUTS ---
+with col1:
+    st.subheader("🛒 Log a Purchase")
+    with st.form("purchase_form"):
+        product_type = st.selectbox("Product Type", options=list(IMPACT_MULTIPLIERS.keys()))
+        brand = st.text_input("Brand Name", placeholder="e.g., Zara, ThriftShop, Apple")
+        price = st.number_input("Price ($)", min_value=0.0, step=1.0)
+        
+        submitted = st.form_submit_button("Calculate Impact")
+
+    if submitted and price > 0:
+        multiplier = IMPACT_MULTIPLIERS[product_type]
+        co2_impact = price * multiplier
+        
+        # Save to state
+        new_purchase = {
+            "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
+            "product": product_type,
+            "brand": brand,
+            "price": price,
+            "co2": co2_impact
+        }
+        st.session_state.purchases.append(new_purchase)
+        st.session_state.total_co2 += co2_impact
+        
+        # Determine Visual Feedback
+        if multiplier < 0.2:
+            st.session_state.last_action = "leaf"
+            st.success(f"Great choice! {random.choice(ECO_TIPS)}")
         else:
-            st.error("Please enter a product name.")
+            st.session_state.last_action = "footprint"
+            st.warning(f"Note: This has a higher footprint. {random.choice(QUOTES)}")
 
-# --- STAGE 4: MAIN DASHBOARD ---
-if st.session_state.purchase_history:
-    df = pd.DataFrame(st.session_state.purchase_history)
-    total_co2 = df["CO2_kg"].sum()
+# --- RIGHT COLUMN: VISUALS & TURTLE ---
+with col2:
+    st.subheader("🎨 Live Impact Visualization")
+    
+    # 1. Suggestions Logic
+    if submitted:
+        if product_type in GREEN_ALTERNATIVES and IMPACT_MULTIPLIERS[product_type] > 0.3:
+            st.info(f"💡 **Better Alternatives for next time:** Try brands like {', '.join(GREEN_ALTERNATIVES[product_type])}")
 
-    # SECTION: Total Impact (High Visibility)
-    st.markdown(f"""
-        <div class="metric-card">
-            <div class="metric-label">Total Cumulative CO₂ Footprint</div>
-            <div class="metric-value">{total_co2:.2f} kg</div>
+    # 2. The "Turtle" Drawing Area
+    if st.session_state.last_action:
+        st.markdown(f"**Drawing your impact...**")
+        fig = draw_virtual_turtle(st.session_state.last_action)
+        st.pyplot(fig, use_container_width=False)
+    else:
+        # Default empty state
+        st.markdown("*Log a purchase to see the Eco-Turtle draw!*")
+        st.markdown("🐢")
+
+# --- DASHBOARD SECTION ---
+st.markdown("---")
+st.subheader("📊 Monthly Impact Dashboard")
+
+if len(st.session_state.purchases) > 0:
+    df = pd.DataFrame(st.session_state.purchases)
+    
+    # Metrics Row
+    m1, m2, m3 = st.columns(3)
+    total_spend = df['price'].sum()
+    total_impact = df['co2'].sum()
+    
+    m1.metric("Total Spent", f"${total_spend:.2f}")
+    m2.metric("Est. CO₂ Footprint", f"{total_impact:.2f} kg")
+    
+    # Badge Logic
+    badge_level = "None"
+    if total_impact / len(df) < 10: # Average impact low
+        badge_level = "Eco Saver of the Month"
+        badge_color = "leaf"
+    elif total_impact / len(df) < 30:
+        badge_level = "Conscious Consumer"
+        badge_color = "badge"
+    else:
+        badge_level = "High Impact Shopper"
+        badge_color = "footprint"
+        
+    with m3:
+        st.markdown(f"""
+        <div class="badge-box">
+            Current Status:<br>{badge_level}
         </div>
         """, unsafe_allow_html=True)
 
-    col1, col2 = st.columns([2, 1])
-
-    with col1:
-        st.subheader("📑 Purchase Logs")
-        st.dataframe(df, use_container_width=True, height=300)
-        
-        # Download Report Feature 
-        csv = df.to_csv(index=False).encode('utf-8')
-        st.download_button(
-            label="📥 Export Report (CSV)",
-            data=csv,
-            file_name=f"ShopImpact_Report_{datetime.date.today()}.csv",
-            mime="text/csv",
-        )
-
-    with col2:
-        st.subheader("🎯 Goal Progress")
-        # Visual Progress Bar replaces Turtle for better visibility
-        limit = 50.0
-        progress = min(total_co2 / limit, 1.0)
-        st.progress(progress)
-        st.write(f"Monthly Limit: {total_co2:.1f} / {limit} kg")
-        
-        # Reward/Badge logic 
-        if total_co2 < 20:
-            st.success("🏆 Status: Eco Saver of the Month!")
-        elif total_co2 < limit:
-            st.warning("⚠️ Status: Mindful Shopper")
-        else:
-            st.error("🚨 Status: High Impact - Try greener alternatives!")
+    # Charts
+    c1, c2 = st.columns(2)
+    with c1:
+        st.markdown("#### Spending vs. CO₂ Impact")
+        st.bar_chart(df[['price', 'co2']])
+    
+    with c2:
+        st.markdown("#### Recent History")
+        st.dataframe(df.sort_values(by="date", ascending=False), height=200)
 
 else:
-    # Friendly empty state
-    st.info("Your dashboard is empty. Use the sidebar to log your first purchase and start tracking your impact!")
+    st.info("Start logging purchases to see your dashboard update in real-time!")
 
-st.divider()
-st.caption("Developed for ShopImpact Ltd. | Conscious Shopping Dashboard Project ")
+# --- SIDEBAR EXTRAS ---
+with st.sidebar:
+    st.header("⚙️ Settings")
+    st.write("Toggle settings to customize your experience.")
+    
+    dark_mode = st.checkbox("Dark Mode Support (System Default)")
+    if st.button("Reset All Data"):
+        st.session_state.purchases = []
+        st.session_state.total_co2 = 0.0
+        st.session_state.last_action = None
+        st.rerun()
+    
+    st.markdown("---")
+    st.markdown("### 🌍 Daily Inspiration")
+    st.markdown(f"*{random.choice(QUOTES)}*")
+
+            
