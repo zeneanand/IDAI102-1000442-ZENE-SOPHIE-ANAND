@@ -322,12 +322,21 @@ with c1:
 
     # --- RECOMMENDATIONS & TIPS ---
     st.markdown("<br>", unsafe_allow_html=True)
-    # FIX: Get last CO2 value safely from session state
     if st.session_state.animation_trigger == "footprint" and prod in GREEN_ALTERNATIVES:
-        # Retrieve the most recent CO2 value from the last purchase in the list
         last_co2 = st.session_state.purchases[-1]['co2'] if st.session_state.purchases else 0
         st.error(f"🛑 High Impact Detected! ({last_co2:.1f}kg CO₂)")
-        st.markdown(f"**Try these instead:** {', '.join(GREEN_ALTERNATIVES[prod])}")
+        
+        # --- NEW DARKER TEXT BOX ---
+        st.markdown(f"""
+        <div style="background-color: #fffde7; padding: 15px; border-radius: 10px; border: 2px solid #fbc02d; margin-top: 10px;">
+            <p style="color: #004d40; font-weight: 800; font-size: 18px; margin: 0;">
+                ✅ Try these greener options instead:
+            </p>
+            <p style="color: #000000; font-weight: bold; font-size: 16px; margin-top: 5px;">
+                {', '.join(GREEN_ALTERNATIVES[prod])}
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
     
     st.markdown(f"""
     <div class="tip-box">
@@ -364,6 +373,6 @@ if st.session_state.purchases:
         
     with tab2:
         st.dataframe(chart_data, use_container_width=True)
-        
+    
 
 
