@@ -1,92 +1,57 @@
-# 🌿 ShopImpact: Mindful Shopping Companion
+# 🐢 ShopImpact: The Colorful Eco-Tracker
 
-ShopImpact is an interactive, colorful web application built with Python and Streamlit. It transforms everyday shopping logging into a mindful, eco-conscious experience. By estimating the CO₂ footprint of planned purchases and visualizing the data with playful "Turtle" graphics, ShopImpact nudges users toward greener habits.
+ShopImpact is a vibrant, interactive Python web app designed to make sustainable shopping fun. It combines **real-time data analytics** with **playful "Turtle" animations** to visualize the environmental cost of your purchases.
 
-## 🚀 Features
-
-### Compulsory Features
-* **Real-time Tracking:** Input product type, brand, and price to see instant results.
-* **CO₂ Estimation:** Logic-based calculation utilizing multipliers (e.g., Fast Fashion = High Impact, Second-hand = Low Impact).
-* **Interactive Dashboard:** Live visualization of total spend vs. environmental cost.
-* **Smart Suggestions:** Automatically suggests ethical alternatives for high-impact items.
-* **Gamification:** Awards badges like "Eco Saver" based on shopping behavior.
-* **Turtle Graphics:** A custom "Virtual Turtle" engine that draws leaves (good choices) or footprints (heavy impact) directly in the browser.
-
-### Creative & Optional Features
-* **Eco Tips & Quotes:** Randomly generated educational snippets to inspire the user.
-* **Earthy UI Design:** A custom styling palette (Beiges, Greens, Blues) to evoke nature.
-* **State Persistence:** Keeps track of your session data dynamically.
+## 🌟 Key Features
+* **🎨 Colorful & Interactive:** A bright, nature-inspired UI (Mint, Ocean Blue, Sun Yellow).
+* **🐢 Animated Turtle Graphics:** Watch a virtual turtle draw a "Leaf" (good choice) or "Footprint" (high impact) in real-time.
+* **📊 Live Dashboard:** Instant updates on spending and Carbon Footprint.
+* **🏆 Badges & Gamification:** Earn "Eco Warrior" status by making green choices.
+* **💡 Smart Suggestions:** Get alerts and greener brand alternatives for high-impact items.
 
 ---
 
-## 🛠️ Installation & Setup
+## 📸 App Screenshots & Design
 
-### Prerequisites
-You need Python installed on your system.
+### 1. The Interface
+*(Replace this line with a screenshot of your running app showing the dashboard)*
+![Dashboard Screenshot](insert_your_screenshot_here.png)
 
-1.  **Clone the Repository** (or save the files provided):
-    ```bash
-    git clone [https://github.com/yourusername/ShopImpact.git](https://github.com/yourusername/ShopImpact.git)
-    cd ShopImpact
-    ```
+### 2. Design Wireframes / Sketches
+*Below are the initial rough sketches used to design the UI layout and Turtle area.*
 
-2.  **Install Dependencies**:
+**(Instructions: Draw a simple box on paper. Put inputs on left, a turtle on right. Take a photo and link it here)**
+![Wireframe Sketch](insert_your_sketch_photo_here.jpg)
+
+---
+
+## 🚀 How to Run
+
+1.  **Install Requirements:**
     ```bash
     pip install -r requirements.txt
     ```
 
-3.  **Run the Application**:
+2.  **Launch the App:**
     ```bash
     streamlit run app.py
     ```
 
-4.  **View**: The app will automatically open in your web browser at `http://localhost:8501`.
+3.  **Enjoy:** Open the link (usually `localhost:8501`) in your browser.
 
 ---
 
-## 📂 Project Structure
-
-ShopImpact/
-│
-├── app.py              # Main application logic and UI
-├── requirements.txt    # List of python libraries required
-└── README.md           # Documentation
----
-
-## 🧠 Logic & Calculations
-
-### 1. CO₂ Calculation
-The app uses a **Price × Multiplier** approach to estimate impact.
-* *Formula:* `Price ($) × Impact Factor = Estimated CO₂ (kg)`
-* *Example:* * Sustainable Clothing ($50) × 0.1 = **5 kg CO₂**
-    * Fast Fashion ($50) × 0.5 = **25 kg CO₂**
-
-### 2. The "Virtual Turtle"
-Standard Python `turtle` graphics do not work in web browsers (headless environments). To solve this, **ShopImpact uses Matplotlib** to simulate turtle drawings.
-* It calculates geometry coordinates for leaves and footprints.
-* It renders them as plots that look like line drawings.
-* This ensures the app works perfectly on Streamlit Cloud without crashing.
-
-### 3. Badge System
-Badges are awarded based on the **Average CO₂ per Item**:
-* **< 10kg avg:** "Eco Saver of the Month" (Green Leaf)
-* **10kg - 30kg avg:** "Conscious Consumer" (Gold Badge)
-* **> 30kg avg:** "High Impact Shopper" (Red Footprint)
+## 🐢 "Turtle" Graphics Logic
+Because standard Python `turtle` crashes in web browsers, this app uses a custom **Matplotlib Animation Engine**.
+* It calculates geometry for leaves and footprints.
+* It uses `time.sleep()` and iterative plotting to simulate the "drawing" motion of a turtle stroke-by-stroke.
 
 ---
 
-## 🎨 Visual Style
-The app uses a custom CSS injection to override Streamlit's defaults:
-* **Background:** Cream/Off-white (#Fdfcf5)
-* **Accents:** Earthy Green (#2A9D8F) and Burnt Orange (#E76F51)
-* **Fonts:** Clean, sans-serif fonts for readability.
+## 🛠️ Tech Stack
+* **Python** (Logic)
+* **Streamlit** (Frontend & Interactivity)
+* **Matplotlib** (Animation & Graphics)
+* **Pandas** (Data Management)
 
----
-
-## 🧪 Testing
-We have tested the app with the following scenarios:
-1.  **Scenario A (Eco):** $20 Thrift store purchase -> Result: Draws a leaf, low CO2, suggests nothing.
-2.  **Scenario B (High Impact):** $100 Leather shoes -> Result: Draws a footprint, high CO2, suggests "Pineapple Leather".
-3.  **Dashboard:** Updates instantly after every "Calculate" click.
-
-Enjoy your journey to sustainable shopping! 🌍
+Made with 💚 for a greener planet.
