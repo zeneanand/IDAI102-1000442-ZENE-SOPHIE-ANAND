@@ -1,146 +1,92 @@
-# IDAI102-1000442-ZENE-SOPHIE-ANAND
+# 🌿 ShopImpact: Mindful Shopping Companion
+
+ShopImpact is an interactive, colorful web application built with Python and Streamlit. It transforms everyday shopping logging into a mindful, eco-conscious experience. By estimating the CO₂ footprint of planned purchases and visualizing the data with playful "Turtle" graphics, ShopImpact nudges users toward greener habits.
+
+## 🚀 Features
+
+### Compulsory Features
+* **Real-time Tracking:** Input product type, brand, and price to see instant results.
+* **CO₂ Estimation:** Logic-based calculation utilizing multipliers (e.g., Fast Fashion = High Impact, Second-hand = Low Impact).
+* **Interactive Dashboard:** Live visualization of total spend vs. environmental cost.
+* **Smart Suggestions:** Automatically suggests ethical alternatives for high-impact items.
+* **Gamification:** Awards badges like "Eco Saver" based on shopping behavior.
+* **Turtle Graphics:** A custom "Virtual Turtle" engine that draws leaves (good choices) or footprints (heavy impact) directly in the browser.
+
+### Creative & Optional Features
+* **Eco Tips & Quotes:** Randomly generated educational snippets to inspire the user.
+* **Earthy UI Design:** A custom styling palette (Beiges, Greens, Blues) to evoke nature.
+* **State Persistence:** Keeps track of your session data dynamically.
 
 ---
 
-#  ShopImpact: Conscious Shopping Dashboard
-
-**ShopImpact** is a high-visibility, professional data dashboard designed to help consumers bridge the gap between financial spending and environmental responsibility. By calculating the estimated  footprint of everyday purchases, it transforms a standard shopping list into a powerful tool for environmental mindfulness.
-
----
-
-## 📖 Table of Contents
-
-* [Core Concept](https://www.google.com/search?q=%23-core-concept)
-* [Key Features](https://www.google.com/search?q=%23-key-features)
-* [Technical Architecture](https://www.google.com/search?q=%23-technical-architecture)
-* [Installation Guide](https://www.google.com/search?q=%23-installation-guide)
-* [How the Impact is Calculated](https://www.google.com/search?q=%23-how-the-impact-is-calculated)
-* [Usage Instructions](https://www.google.com/search?q=%23-usage-instructions)
-* [Roadmap](https://www.google.com/search?q=%23-roadmap)
-
----
-
-##  Core Concept
-
-The fashion and retail industries are major contributors to global carbon emissions. **ShopImpact** addresses this by providing "at-a-glance" ecological feedback. Built with an "earthy" professional aesthetic, the dashboard provides immediate psychological rewards (status badges) for low-impact spending, encouraging users to stay within a sustainable monthly "carbon budget."
-
----
-
-##  Key Features
-
-### 1. High-Visibility Impact Metrics
-
-The dashboard features a custom-coded CSS "Metric Card" that highlights the total cumulative  footprint in high-contrast red, ensuring the user's primary impact is never overlooked.
-
-### 2. Intelligent Data Logging
-
-A streamlined sidebar allows for rapid data entry, including:
-
-* **Product Categorization:** Automatically matches inputs against a curated database.
-* **Price-Weighted Impact:** Adjusts carbon cost based on the scale of the purchase.
-* **Brand Tracking:** Keep a record of which brands you frequent most.
-
-### 3. Gamified Sustainability
-
-Includes a **Goal Progress** engine that monitors a monthly 50kg  limit. Users are assigned dynamic statuses based on their performance:
-
-*  **Eco Saver:** Under 20kg.
-*  **Mindful Shopper:** Approaching the limit.
-*  **High Impact:** Exceeding sustainable thresholds.
-
-### 4. Data Portability
-
-Integrated CSV export functionality allows users to download their history for personal record-keeping or detailed analysis in Excel/PowerBI.
-
----
-
-##  Technical Architecture
-
-The application is built using a modern Python stack optimized for data transparency:
-
-* **Frontend:** Streamlit (Custom CSS injection for professional branding).
-* **Data Processing:** Pandas (Vectorized calculations and dataframe management).
-* **State Management:** `st.session_state` for real-time history updates without database overhead.
-
----
-
-##  Installation Guide
+## 🛠️ Installation & Setup
 
 ### Prerequisites
+You need Python installed on your system.
 
-* Python 3.9 or higher
-* Pip (Python package manager)
+1.  **Clone the Repository** (or save the files provided):
+    ```bash
+    git clone [https://github.com/yourusername/ShopImpact.git](https://github.com/yourusername/ShopImpact.git)
+    cd ShopImpact
+    ```
 
-### Step-by-Step Setup
+2.  **Install Dependencies**:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-1. **Clone the Repository**
-```bash
-git clone https://github.com/yourusername/shop-impact-dashboard.git
-cd shop-impact-dashboard
+3.  **Run the Application**:
+    ```bash
+    streamlit run app.py
+    ```
 
-```
-
-
-2. **Install Dependencies**
-```bash
-pip install streamlit pandas
-
-```
-
-
-3. **Launch the Dashboard**
-```bash
-streamlit run app.py
-
-```
-
-
+4.  **View**: The app will automatically open in your web browser at `http://localhost:8501`.
 
 ---
 
-## How the Impact is Calculated
+## 📂 Project Structure
 
-The dashboard utilizes a "Multiplier-Price" logic to estimate emissions. Each product category is assigned a carbon intensity factor based on average production emissions.
+ShopImpact/
+│
+├── app.py              # Main application logic and UI
+├── requirements.txt    # List of python libraries required
+└── README.md           # Documentation
+---
 
-The formula used is:
+## 🧠 Logic & Calculations
 
+### 1. CO₂ Calculation
+The app uses a **Price × Multiplier** approach to estimate impact.
+* *Formula:* `Price ($) × Impact Factor = Estimated CO₂ (kg)`
+* *Example:* * Sustainable Clothing ($50) × 0.1 = **5 kg CO₂**
+    * Fast Fashion ($50) × 0.5 = **25 kg CO₂**
 
-| Product Type | Multiplier (kg ) | Notes |
-| --- | --- | --- |
-| **Beef** | 27.0 | High methane and land use impact |
-| **Leather Shoes** | 15.2 | Significant tanning and livestock footprint |
-| **Cotton T-shirt** | 6.0 | Conventional water and pesticide use |
-| **Organic Shirt** | 2.1 | Reduced chemical and water footprint |
+### 2. The "Virtual Turtle"
+Standard Python `turtle` graphics do not work in web browsers (headless environments). To solve this, **ShopImpact uses Matplotlib** to simulate turtle drawings.
+* It calculates geometry coordinates for leaves and footprints.
+* It renders them as plots that look like line drawings.
+* This ensures the app works perfectly on Streamlit Cloud without crashing.
+
+### 3. Badge System
+Badges are awarded based on the **Average CO₂ per Item**:
+* **< 10kg avg:** "Eco Saver of the Month" (Green Leaf)
+* **10kg - 30kg avg:** "Conscious Consumer" (Gold Badge)
+* **> 30kg avg:** "High Impact Shopper" (Red Footprint)
 
 ---
 
-## Usage Instructions
-
-1. **Enter Details:** Use the left sidebar to type in your product (e.g., "Sneakers").
-2. **Assign Brand & Price:** Input the purchase price to scale the impact calculation.
-3. **Log it:** Click "Add to Dashboard." The main view will update instantly.
-4. **Monitor Goals:** Check the "Goal Progress" bar on the right to see how much of your monthly 50kg limit remains.
-5. **Export:** At the end of the month, click "Export Report" to save your progress.
+## 🎨 Visual Style
+The app uses a custom CSS injection to override Streamlit's defaults:
+* **Background:** Cream/Off-white (#Fdfcf5)
+* **Accents:** Earthy Green (#2A9D8F) and Burnt Orange (#E76F51)
+* **Fonts:** Clean, sans-serif fonts for readability.
 
 ---
 
-## Roadmap
+## 🧪 Testing
+We have tested the app with the following scenarios:
+1.  **Scenario A (Eco):** $20 Thrift store purchase -> Result: Draws a leaf, low CO2, suggests nothing.
+2.  **Scenario B (High Impact):** $100 Leather shoes -> Result: Draws a footprint, high CO2, suggests "Pineapple Leather".
+3.  **Dashboard:** Updates instantly after every "Calculate" click.
 
-* [ ] **Global Search:** Integrate an API to pull real-time carbon data for specific brands.
-* [ ] **Historical Trends:** Add line charts showing CO2 trends over 6–12 months.
-* [ ] **Multi-Currency Support:** Add automated currency conversion for global users.
-* [ ] **User Auth:** Allow users to create accounts and save data to a cloud database (Firebase/Supabase).
-
----
-
-## License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
-##  Contact
-
-**Project Lead:** Your Name / ShopImpact Ltd.
-
-**Project Link:** [(https://idai102-1000442-zene-sophie-anand-dxqlgjrqxrw3kpekeefygd.streamlit.app/](https://idai102-1000442-zene-sophie-anand-dxqlgjrqxrw3kpekeefygd.streamlit.app/)
-
----
+Enjoy your journey to sustainable shopping! 🌍
