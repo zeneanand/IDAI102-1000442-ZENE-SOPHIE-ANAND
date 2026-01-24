@@ -226,7 +226,6 @@ with st.sidebar:
         
     st.markdown("---")
     st.write("**Reset App:**")
-    # This block below must be indented correctly
     if st.button("Reset Everything"):
         st.session_state.purchases = []
         st.session_state.total_co2 = 0.0
@@ -379,7 +378,8 @@ st.markdown("---")
 
 # --- FEEDBACK FORM ---
 st.subheader("💌 We value your feedback!")
-st.write("Help us make ShopImpact better for everyone.")
+# -- UPDATED TO DARKER TEXT --
+st.markdown('<p style="font-weight:bold; color:#00251a; font-size:18px;">Help us make ShopImpact better for everyone.</p>', unsafe_allow_html=True)
 
 with st.form("feedback_form"):
     c_feed1, c_feed2 = st.columns(2)
@@ -394,6 +394,8 @@ with st.form("feedback_form"):
     if submit_feedback:
         st.success("✅ Thank you for your feedback! We are listening.")
         st.toast("Feedback received!", icon="📩")
+                
+        
         
         
     
