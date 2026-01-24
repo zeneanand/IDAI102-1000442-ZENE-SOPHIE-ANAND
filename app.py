@@ -1,4 +1,4 @@
-streamlit as st
+import streamlit as st
 import pandas as pd
 import random
 import matplotlib.pyplot as plt
@@ -40,7 +40,7 @@ st.markdown("""
     }
 
     /* INPUT LABELS - Make them bold and dark */
-    .stSelectbox label, .stNumberInput label, .stTextInput label {
+    .stSelectbox label, .stNumberInput label, .stTextInput label, .stTextArea label, .stSlider label {
         color: #00251a !important;
         font-size: 16px !important;
         font-weight: bold !important;
@@ -211,168 +211,7 @@ with st.sidebar:
     st.markdown("Collect badges by making eco-friendly choices!")
     
     if len(st.session_state.badges) > 0:
-        # Display badges in a grid
-        cols = st.columns(2)
-        for i, badge in enumerate(st.session_state.badges):
-            with cols[i % 2]:
-                st.markdown(f"""
-                <div class="trophy-item">
-                    <div style="font-size:30px;">{badge['icon']}</div>
-                    {badge['name']}
-                </div>
-                """, unsafe_allow_html=True)
-    else:
-        st.info("No badges yet. Start shopping sustainably!")
         
-    st.markdown("---")
-    st.write("**Reset App:**")
-    if st.button("Reset Everything"):
-        st.session_state.purchases = []
-        st.session_state.total_co2 = 0.0
-        st.session_state.badges = []
-        st.rerun()
-
-# --- MAIN APP LAYOUT ---
-
-st.title("🐢 ShopImpact")
-st.markdown("### *Making Sustainability Fun & Visual*")
-
-# --- TOP STATS ROW ---
-if st.session_state.purchases:
-    col_a, col_b, col_c = st.columns(3)
-    df = pd.DataFrame(st.session_state.purchases)
-    avg_co2 = df['co2'].mean()
-    
-    with col_a:
-        st.metric("💸 Total Spent", f"${df['price'].sum():.2f}")
-    with col_b:
-        st.metric("☁️ Total CO₂", f"{st.session_state.total_co2:.1f} kg")
-    with col_c:
-        # Dynamic Level Badge
-        if avg_co2 < 5:
-            b_class, b_name, b_icon = "badge-green", "Eco Warrior", "🌿"
-        elif avg_co2 < 15:
-            b_class, b_name, b_icon = "badge-gold", "Conscious Buyer", "⭐"
-        else:
-            b_class, b_name, b_icon = "badge-red", "High Footprint", "👣"
-            
-        st.markdown(f"""
-        <div class="badge-card {b_class}">
-            <h3 style="color:#000; margin:0;">{b_icon} Level</h3>
-            <p style="font-weight:bold; font-size:18px; margin:0;">{b_name}</p>
-        </div>
-        """, unsafe_allow_html=True)
-else:
-    st.info("👋 Welcome! Start adding items below to unlock your dashboard.")
-
-st.markdown("---")
-
-# --- MAIN INTERFACE ---
-c1, c2 = st.columns([1, 1])
-
-with c1:
-    st.subheader("📝 Add Item")
-    with st.container():
-        prod = st.selectbox("Product", list(IMPACT_MULTIPLIERS.keys()))
-        price = st.number_input("Price ($)", min_value=1.0, value=20.0)
-        brand = st.text_input("Brand", "Generic")
-        
-        if st.button("🚀 Calculate Impact"):
-            co2_val = price * IMPACT_MULTIPLIERS[prod]
-            multiplier = IMPACT_MULTIPLIERS[prod]
-            
-            # Record Purchase
-            st.session_state.purchases.append({
-                "date": datetime.now().strftime("%H:%M"),
-                "product": prod, "price": price, "co2": co2_val
-            })
-            st.session_state.total_co2 += co2_val
-            
-            # --- BADGE UNLOCK LOGIC ---
-            new_badge = None
-            
-            # Badge 1: First Eco Choice
-            if multiplier <= 0.1:
-                if not any(b['name'] == 'Eco Starter' for b in st.session_state.badges):
-                    new_badge = {"name": "Eco Starter", "icon": "🌱"}
-            
-            # Badge 2: Thrift King
-            if prod == "Thrift/Second-hand":
-                if not any(b['name'] == 'Thrift King' for b in st.session_state.badges):
-                    new_badge = {"name": "Thrift King", "icon": "👑"}
-            
-            # Badge 3: Green Investor
-            if price > 50 and multiplier <= 0.1:
-                if not any(b['name'] == 'Green Investor' for b in st.session_state.badges):
-                    new_badge = {"name": "Green Investor", "icon": "💎"}
-
-            if new_badge:
-                st.session_state.badges.append(new_badge)
-                st.balloons() # CELEBRATION!
-                st.toast(f"🎉 New Badge Unlocked: {new_badge['name']}!", icon=new_badge['icon'])
-                st.session_state.animation_trigger = "badge" 
-            
-            elif multiplier < 0.2:
-                st.session_state.animation_trigger = "leaf"
-            else:
-                st.session_state.animation_trigger = "footprint"
-            
-            time.sleep(0.5) 
-            st.rerun()
-
-    # --- RECOMMENDATIONS & TIPS ---
-    st.markdown("<br>", unsafe_allow_html=True)
-    if st.session_state.animation_trigger == "footprint" and prod in GREEN_ALTERNATIVES:
-        last_co2 = st.session_state.purchases[-1]['co2'] if st.session_state.purchases else 0
-        st.error(f"🛑 High Impact Detected! ({last_co2:.1f}kg CO₂)")
-        
-        # --- NEW DARKER TEXT BOX ---
-        st.markdown(f"""
-        <div style="background-color: #fffde7; padding: 15px; border-radius: 10px; border: 2px solid #fbc02d; margin-top: 10px;">
-            <p style="color: #004d40; font-weight: 800; font-size: 18px; margin: 0;">
-                ✅ Try these greener options instead:
-            </p>
-            <p style="color: #000000; font-weight: bold; font-size: 16px; margin-top: 5px;">
-                {', '.join(GREEN_ALTERNATIVES[prod])}
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    st.markdown(f"""
-    <div class="tip-box">
-        {random.choice(ECO_TIPS)}
-    </div>
-    """, unsafe_allow_html=True)
-
-with c2:
-    st.subheader("🎨 Turtle Canvas")
-    
-    # ANIMATION LOGIC
-    if st.session_state.animation_trigger:
-        animate_turtle(st.session_state.animation_trigger)
-        st.session_state.animation_trigger = None # Reset
-    else:
-        # Static placeholder when idle
-        st.markdown("""
-        <div style="text-align:center; padding: 50px; border: 3px dashed #00695c; border-radius: 20px; background-color: rgba(255,255,255,0.5);">
-            <h1 style="font-size: 50px;">🐢</h1>
-            <p style="font-weight:bold; font-size:18px;">I'm waiting to draw your impact!</p>
-        </div>
-        """, unsafe_allow_html=True)
-
-st.markdown("---")
-# --- CHARTS ---
-st.subheader("📊 Visual Analytics")
-if st.session_state.purchases:
-    chart_data = pd.DataFrame(st.session_state.purchases)
-    
-    tab1, tab2 = st.tabs(["📉 CO₂ Trend", "📋 Purchase History"])
-    
-    with tab1:
-        st.area_chart(chart_data.reset_index(), x='index', y='co2', color="#004d40")
-        
-    with tab2:
-        st.dataframe(chart_data, use_container_width=True)
     
 
 
