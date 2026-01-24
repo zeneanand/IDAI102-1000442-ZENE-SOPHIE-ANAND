@@ -46,15 +46,16 @@ st.markdown("""
         font-weight: bold !important;
     }
 
-    /* METRICS - Dark Burnt Orange */
+    /* METRICS - NEW COLOR (Deep Navy Blue) */
     div[data-testid="stMetricValue"] {
-        font-size: 2.2rem;
-        color: #bf360c !important; 
+        font-size: 2.4rem;
+        color: #0d47a1 !important; /* Changed to Deep Navy Blue */
         font-weight: 900;
     }
     div[data-testid="stMetricLabel"] {
-        color: #37474f !important;
+        color: #000000 !important; /* Pure Black for Labels */
         font-weight: bold;
+        font-size: 1.1rem;
     }
 
     /* BUTTONS - High Contrast Yellow */
@@ -273,7 +274,7 @@ c1, c2 = st.columns([1, 1])
 with c1:
     st.subheader("📝 Add Item")
     with st.container():
-        # --- MODIFIED INPUTS HERE ---
+        # --- INPUTS ---
         item_name = st.text_input("Item Name", placeholder="e.g. Vintage Jacket")
         category = st.selectbox("Category (Determines Impact)", list(IMPACT_MULTIPLIERS.keys()))
         price = st.number_input("Price ($)", min_value=1.0, value=20.0)
@@ -283,7 +284,7 @@ with c1:
             co2_val = price * IMPACT_MULTIPLIERS[category]
             multiplier = IMPACT_MULTIPLIERS[category]
             
-            # Record Purchase with Item Name
+            # Record Purchase
             st.session_state.purchases.append({
                 "date": datetime.now().strftime("%H:%M"),
                 "item": item_name if item_name else "Unknown Item",
@@ -296,24 +297,21 @@ with c1:
             # --- BADGE UNLOCK LOGIC ---
             new_badge = None
             
-            # Badge 1: First Eco Choice
             if multiplier <= 0.1:
                 if not any(b['name'] == 'Eco Starter' for b in st.session_state.badges):
                     new_badge = {"name": "Eco Starter", "icon": "🌱"}
             
-            # Badge 2: Thrift King
             if category == "Thrift/Second-hand":
                 if not any(b['name'] == 'Thrift King' for b in st.session_state.badges):
                     new_badge = {"name": "Thrift King", "icon": "👑"}
             
-            # Badge 3: Green Investor
             if price > 50 and multiplier <= 0.1:
                 if not any(b['name'] == 'Green Investor' for b in st.session_state.badges):
                     new_badge = {"name": "Green Investor", "icon": "💎"}
 
             if new_badge:
                 st.session_state.badges.append(new_badge)
-                st.balloons() # CELEBRATION!
+                st.balloons() 
                 st.toast(f"🎉 New Badge Unlocked: {new_badge['name']}!", icon=new_badge['icon'])
                 st.session_state.animation_trigger = "badge" 
             
@@ -377,7 +375,6 @@ if st.session_state.purchases:
         st.area_chart(chart_data.reset_index(), x='index', y='co2', color="#004d40")
         
     with tab2:
-        # Show the new Item column first
         st.dataframe(chart_data[['date', 'item', 'category', 'price', 'co2']], use_container_width=True)
 
 st.markdown("---")
@@ -399,6 +396,7 @@ with st.form("feedback_form"):
     if submit_feedback:
         st.success("✅ Thank you for your feedback! We are listening.")
         st.toast("Feedback received!", icon="📩")
+                    
         
                 
         
