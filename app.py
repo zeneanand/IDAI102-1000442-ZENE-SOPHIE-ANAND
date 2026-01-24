@@ -273,18 +273,23 @@ c1, c2 = st.columns([1, 1])
 with c1:
     st.subheader("📝 Add Item")
     with st.container():
-        prod = st.selectbox("Product", list(IMPACT_MULTIPLIERS.keys()))
+        # --- MODIFIED INPUTS HERE ---
+        item_name = st.text_input("Item Name", placeholder="e.g. Vintage Jacket")
+        category = st.selectbox("Category (Determines Impact)", list(IMPACT_MULTIPLIERS.keys()))
         price = st.number_input("Price ($)", min_value=1.0, value=20.0)
         brand = st.text_input("Brand", "Generic")
         
         if st.button("🚀 Calculate Impact"):
-            co2_val = price * IMPACT_MULTIPLIERS[prod]
-            multiplier = IMPACT_MULTIPLIERS[prod]
+            co2_val = price * IMPACT_MULTIPLIERS[category]
+            multiplier = IMPACT_MULTIPLIERS[category]
             
-            # Record Purchase
+            # Record Purchase with Item Name
             st.session_state.purchases.append({
                 "date": datetime.now().strftime("%H:%M"),
-                "product": prod, "price": price, "co2": co2_val
+                "item": item_name if item_name else "Unknown Item",
+                "category": category,
+                "price": price, 
+                "co2": co2_val
             })
             st.session_state.total_co2 += co2_val
             
@@ -297,7 +302,7 @@ with c1:
                     new_badge = {"name": "Eco Starter", "icon": "🌱"}
             
             # Badge 2: Thrift King
-            if prod == "Thrift/Second-hand":
+            if category == "Thrift/Second-hand":
                 if not any(b['name'] == 'Thrift King' for b in st.session_state.badges):
                     new_badge = {"name": "Thrift King", "icon": "👑"}
             
@@ -322,7 +327,7 @@ with c1:
 
     # --- RECOMMENDATIONS & TIPS ---
     st.markdown("<br>", unsafe_allow_html=True)
-    if st.session_state.animation_trigger == "footprint" and prod in GREEN_ALTERNATIVES:
+    if st.session_state.animation_trigger == "footprint" and category in GREEN_ALTERNATIVES:
         last_co2 = st.session_state.purchases[-1]['co2'] if st.session_state.purchases else 0
         st.error(f"🛑 High Impact Detected! ({last_co2:.1f}kg CO₂)")
         
@@ -333,7 +338,7 @@ with c1:
                 ✅ Try these greener options instead:
             </p>
             <p style="color: #000000; font-weight: bold; font-size: 16px; margin-top: 5px;">
-                {', '.join(GREEN_ALTERNATIVES[prod])}
+                {', '.join(GREEN_ALTERNATIVES[category])}
             </p>
         </div>
         """, unsafe_allow_html=True)
@@ -372,13 +377,13 @@ if st.session_state.purchases:
         st.area_chart(chart_data.reset_index(), x='index', y='co2', color="#004d40")
         
     with tab2:
-        st.dataframe(chart_data, use_container_width=True)
+        # Show the new Item column first
+        st.dataframe(chart_data[['date', 'item', 'category', 'price', 'co2']], use_container_width=True)
 
 st.markdown("---")
 
 # --- FEEDBACK FORM ---
 st.subheader("💌 We value your feedback!")
-# -- UPDATED TO DARKER TEXT --
 st.markdown('<p style="font-weight:bold; color:#00251a; font-size:18px;">Help us make ShopImpact better for everyone.</p>', unsafe_allow_html=True)
 
 with st.form("feedback_form"):
@@ -394,6 +399,7 @@ with st.form("feedback_form"):
     if submit_feedback:
         st.success("✅ Thank you for your feedback! We are listening.")
         st.toast("Feedback received!", icon="📩")
+        
                 
         
         
