@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import random
@@ -7,7 +6,7 @@ import numpy as np
 import time
 from datetime import datetime
 
-# --- CONFIGURATION & STYLING ---
+# --- CONFIGURATION ---
 st.set_page_config(
     page_title="ShopImpact",
     page_icon="🐢",
@@ -15,45 +14,65 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- CSS STYLING ---
+# --- CSS STYLING (Force Black Text & Light Theme) ---
 st.markdown("""
     <style>
-    /* Main Background */
-    .stApp { background: linear-gradient(to bottom right, #e0f7fa, #e8f5e9); }
-    
-    /* Text Colors */
-    html, body, [class*="css"] { color: #102A2E; font-family: 'Verdana', sans-serif; }
-    h1 { color: #004D40 !important; font-family: 'Comic Sans MS', sans-serif; text-shadow: 1px 1px #80cbc4; }
-    h2, h3, h4 { color: #00695c !important; font-weight: 800; }
-    
-    /* Inputs */
-    .stSelectbox label, .stNumberInput label, .stTextInput label, .stTextArea label, .stSlider label {
-        color: #00251a !important; font-size: 16px !important; font-weight: bold !important;
+    /* FORCE LIGHT THEME BACKGROUND */
+    [data-testid="stAppViewContainer"] {
+        background: linear-gradient(to bottom right, #e0f7fa, #e8f5e9);
+        color: #000000 !important;
+    }
+    [data-testid="stSidebar"] {
+        background-color: #ffffff;
     }
 
-    /* Metrics (UPDATED COLORS) */
+    /* FORCE ALL TEXT TO BLACK/DARK */
+    h1, h2, h3, h4, h5, h6, p, div, span, label, li {
+        color: #000000 !important;
+        font-family: 'Verdana', sans-serif;
+    }
+    
+    /* Specific Headers */
+    h1 { font-family: 'Comic Sans MS', sans-serif; text-shadow: 1px 1px #80cbc4; color: #004D40 !important; }
+    
+    /* Inputs */
+    .stTextInput input, .stNumberInput input, .stSelectbox div, .stTextArea textarea {
+        color: #000000 !important;
+        background-color: #ffffff !important;
+    }
+    /* Input Labels */
+    .stSelectbox label, .stNumberInput label, .stTextInput label, .stSlider label {
+        color: #000000 !important;
+        font-weight: 900 !important;
+        font-size: 16px !important;
+    }
+
+    /* Metrics */
     div[data-testid="stMetricValue"] { 
-        font-size: 2.4rem; 
-        color: #004d40 !important; /* Dark Teal for Numbers */
+        color: #004d40 !important; /* Dark Teal Numbers */
+        font-size: 2.4rem;
         font-weight: 900; 
     }
     div[data-testid="stMetricLabel"] { 
-        color: #263238 !important; /* Dark Slate Gray for Labels */
-        font-weight: bold; 
+        color: #000000 !important; /* Black Labels */
+        font-weight: 900; 
         font-size: 1.2rem; 
     }
 
     /* Buttons */
     .stButton>button {
-        background-color: #fdd835; color: #000000; border-radius: 20px; border: 2px solid #f9a825;
-        font-weight: 900; font-size: 18px; transition: all 0.3s ease;
+        background-color: #fdd835; 
+        color: #000000 !important; 
+        border: 2px solid #f9a825;
+        font-weight: 900; 
+        font-size: 18px;
     }
-    .stButton>button:hover { background-color: #ffeb3b; transform: scale(1.05); border-color: #000; }
 
-    /* Cards & Boxes */
+    /* Cards */
     .badge-card {
-        background-color: #ffffff; border-left: 10px solid; padding: 15px; border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.2); text-align: center; margin-bottom: 10px; color: #212121;
+        background-color: #ffffff; border-left: 10px solid; padding: 15px; 
+        border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); 
+        text-align: center; margin-bottom: 10px; color: #000000 !important;
     }
     .badge-green { border-color: #2e7d32; }
     .badge-gold { border-color: #ff8f00; }
@@ -61,11 +80,7 @@ st.markdown("""
 
     .trophy-item {
         background-color: #fff9c4; border: 2px solid #fbc02d; border-radius: 10px;
-        padding: 10px; text-align: center; font-weight: bold; color: #f57f17;
-    }
-    .tip-box {
-        background-color: #e1f5fe; border: 2px dashed #01579b; border-radius: 15px;
-        padding: 15px; color: #0d47a1; font-weight: 600;
+        padding: 10px; text-align: center; font-weight: bold; color: #000000 !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -93,19 +108,20 @@ ECO_TIPS = [
     "💧 Fact: A dripping tap can waste 5,500 liters of water a year."
 ]
 
-# Initialize Session State
 if 'purchases' not in st.session_state:
     st.session_state.purchases = []
 if 'total_co2' not in st.session_state:
     st.session_state.total_co2 = 0.0
-if 'animation_trigger' not in st.session_state:
-    st.session_state.animation_trigger = None
+if 'display_trigger' not in st.session_state:
+    st.session_state.display_trigger = None
 if 'badges' not in st.session_state:
     st.session_state.badges = []
 
-# --- ANIMATED TURTLE ENGINE ---
-def animate_turtle(drawing_type):
-    placeholder = st.empty()
+# --- STATIC TURTLE ENGINE (No Loop Animation) ---
+def show_turtle_drawing(drawing_type):
+    """
+    Displays a static drawing instantly using Matplotlib (No animation loop).
+    """
     fig, ax = plt.subplots(figsize=(4, 4))
     ax.set_aspect('equal')
     ax.axis('off')
@@ -114,49 +130,30 @@ def animate_turtle(drawing_type):
     t = np.linspace(0, 2*np.pi, 100)
     
     if drawing_type == "leaf":
-        x_data = 16 * np.sin(t)**3
-        y_data = (13 * np.cos(t) - 5 * np.cos(2*t) - 2 * np.cos(3*t) - np.cos(4*t)) * 1.2
-        color = '#1b5e20'
-        fill_color = '#a5d6a7'
-        msg = "Eco Hero!"
-        icon = "🌿"
+        x = 16 * np.sin(t)**3
+        y = (13 * np.cos(t) - 5 * np.cos(2*t) - 2 * np.cos(3*t) - np.cos(4*t)) * 1.2
+        color, fill, msg, icon = '#1b5e20', '#a5d6a7', "Eco Hero!", "🌿"
     elif drawing_type == "footprint":
-        x_data = 0.5 * np.cos(t)
-        y_data = 1.0 * np.sin(t)
-        color = '#b71c1c'
-        fill_color = '#ef9a9a'
-        msg = "High Impact"
-        icon = "👣"
+        x = 0.5 * np.cos(t)
+        y = 1.0 * np.sin(t)
+        color, fill, msg, icon = '#b71c1c', '#ef9a9a', "High Impact", "👣"
     else: # Badge
-        x_data = np.cos(t * 5) * 5
-        y_data = np.sin(t * 5) * 5
-        color = '#ff6f00'
-        fill_color = '#fff59d'
-        msg = "Badge Unlocked!"
-        icon = "🏆"
+        x = np.cos(t * 5) * 5
+        y = np.sin(t * 5) * 5
+        color, fill, msg, icon = '#ff6f00', '#fff59d', "Badge Unlocked!", "🏆"
 
-    for i in range(1, 101, 5):
-        ax.clear()
-        ax.set_aspect('equal')
-        ax.axis('off')
-        ax.plot(x_data[:i], y_data[:i], color=color, linewidth=3)
-        ax.scatter(x_data[i-1], y_data[i-1], color=color, s=120, marker='o') 
-        placeholder.pyplot(fig, use_container_width=False)
-        time.sleep(0.01) 
+    # Draw Instantly (No Loop)
+    ax.fill(x, y, color=fill, alpha=0.6)
+    ax.plot(x, y, color=color, linewidth=3)
+    ax.text(0, 0, f"{icon}\n{msg}", ha='center', va='center', fontsize=14, fontweight='bold', color='#000000')
+    
+    return fig
 
-    ax.clear()
-    ax.axis('off')
-    ax.fill(x_data, y_data, color=fill_color, alpha=0.6)
-    ax.plot(x_data, y_data, color=color, linewidth=3)
-    ax.text(0, 0, f"{icon}\n{msg}", ha='center', va='center', fontsize=14, fontweight='bold', color='#263238')
-    placeholder.pyplot(fig, use_container_width=False)
-
-# --- SIDEBAR TROPHY CASE ---
+# --- SIDEBAR ---
 with st.sidebar:
     st.header("🏆 Your Trophy Case")
     st.markdown("Collect badges by making eco-friendly choices!")
-    
-    if len(st.session_state.badges) > 0:
+    if st.session_state.badges:
         cols = st.columns(2)
         for i, badge in enumerate(st.session_state.badges):
             with cols[i % 2]:
@@ -164,165 +161,138 @@ with st.sidebar:
                 <div class="trophy-item">
                     <div style="font-size:30px;">{badge['icon']}</div>
                     {badge['name']}
-                </div>
-                """, unsafe_allow_html=True)
+                </div>""", unsafe_allow_html=True)
     else:
-        st.info("No badges yet. Start shopping sustainably!")
-        
+        st.info("No badges yet.")
+    
     st.markdown("---")
-    st.write("**Reset App:**")
     if st.button("Reset Everything"):
         st.session_state.purchases = []
         st.session_state.total_co2 = 0.0
         st.session_state.badges = []
         st.rerun()
 
-# --- MAIN APP LAYOUT ---
-
+# --- MAIN APP ---
 st.title("🐢 ShopImpact")
 st.markdown("### *Making Sustainability Fun & Visual*")
 
-# --- TOP STATS ROW ---
+# --- STATS ---
 if st.session_state.purchases:
     col_a, col_b, col_c = st.columns(3)
     df = pd.DataFrame(st.session_state.purchases)
     avg_co2 = df['co2'].mean()
     
-    with col_a:
-        st.metric("💸 Total Spent", f"${df['price'].sum():.2f}")
-    with col_b:
-        st.metric("☁️ Total CO₂", f"{st.session_state.total_co2:.1f} kg")
+    with col_a: st.metric("💸 Total Spent", f"${df['price'].sum():.2f}")
+    with col_b: st.metric("☁️ Total CO₂", f"{st.session_state.total_co2:.1f} kg")
     with col_c:
-        if avg_co2 < 5:
-            b_class, b_name, b_icon = "badge-green", "Eco Warrior", "🌿"
-        elif avg_co2 < 15:
-            b_class, b_name, b_icon = "badge-gold", "Conscious Buyer", "⭐"
-        else:
-            b_class, b_name, b_icon = "badge-red", "High Footprint", "👣"
-            
+        if avg_co2 < 5: b_class, b_name, b_icon = "badge-green", "Eco Warrior", "🌿"
+        elif avg_co2 < 15: b_class, b_name, b_icon = "badge-gold", "Conscious Buyer", "⭐"
+        else: b_class, b_name, b_icon = "badge-red", "High Footprint", "👣"
         st.markdown(f"""
         <div class="badge-card {b_class}">
             <h3 style="color:#000; margin:0;">{b_icon} Level</h3>
             <p style="font-weight:bold; font-size:18px; margin:0;">{b_name}</p>
-        </div>
-        """, unsafe_allow_html=True)
+        </div>""", unsafe_allow_html=True)
 else:
-    st.info("👋 Welcome! Start adding items below to unlock your dashboard.")
+    st.info("👋 Welcome! Start adding items below.")
 
 st.markdown("---")
 
-# --- MAIN INTERFACE ---
 c1, c2 = st.columns([1, 1])
 
+# --- ADD ITEM ---
 with c1:
     st.subheader("📝 Add Item")
     with st.container():
         item_name = st.text_input("Item Name", placeholder="e.g. Vintage Jacket")
-        category = st.selectbox("Category (Determines Impact)", list(IMPACT_MULTIPLIERS.keys()))
-        price = st.number_input("Price ($)", min_value=1.0, value=20.0)
+        category = st.selectbox("Category", list(IMPACT_MULTIPLIERS.keys()))
+        price = st.number_input("Price (rs)", min_value=1.0, value=20.0)
         brand = st.text_input("Brand", "Generic")
         
         if st.button("🚀 Calculate Impact"):
+            # New Animation: Spinner instead of Turtle Draw
+            with st.spinner("🐢 Turtle is calculating..."):
+                time.sleep(0.8) # Small delay for effect
+                
             co2_val = price * IMPACT_MULTIPLIERS[category]
             multiplier = IMPACT_MULTIPLIERS[category]
             
             st.session_state.purchases.append({
                 "date": datetime.now().strftime("%H:%M"),
-                "item": item_name if item_name else "Unknown Item",
+                "item": item_name if item_name else "Unknown",
                 "category": category,
                 "price": price, 
                 "co2": co2_val
             })
             st.session_state.total_co2 += co2_val
             
-            # Badge Logic
+            # Logic
             new_badge = None
-            if multiplier <= 0.1:
-                if not any(b['name'] == 'Eco Starter' for b in st.session_state.badges):
-                    new_badge = {"name": "Eco Starter", "icon": "🌱"}
-            if category == "Thrift/Second-hand":
-                if not any(b['name'] == 'Thrift King' for b in st.session_state.badges):
-                    new_badge = {"name": "Thrift King", "icon": "👑"}
-            if price > 50 and multiplier <= 0.1:
-                if not any(b['name'] == 'Green Investor' for b in st.session_state.badges):
-                    new_badge = {"name": "Green Investor", "icon": "💎"}
+            if multiplier <= 0.1 and not any(b['name'] == 'Eco Starter' for b in st.session_state.badges):
+                new_badge = {"name": "Eco Starter", "icon": "🌱"}
+            if category == "Thrift/Second-hand" and not any(b['name'] == 'Thrift King' for b in st.session_state.badges):
+                new_badge = {"name": "Thrift King", "icon": "👑"}
+            if price > 50 and multiplier <= 0.1 and not any(b['name'] == 'Green Investor' for b in st.session_state.badges):
+                new_badge = {"name": "Green Investor", "icon": "💎"}
 
             if new_badge:
                 st.session_state.badges.append(new_badge)
                 st.balloons() 
-                st.toast(f"🎉 New Badge Unlocked: {new_badge['name']}!", icon=new_badge['icon'])
-                st.session_state.animation_trigger = "badge" 
+                st.toast(f"Unlocked: {new_badge['name']}!", icon=new_badge['icon'])
+                st.session_state.display_trigger = "badge" 
             elif multiplier < 0.2:
-                st.session_state.animation_trigger = "leaf"
+                st.session_state.display_trigger = "leaf"
             else:
-                st.session_state.animation_trigger = "footprint"
+                st.session_state.display_trigger = "footprint"
             
-            time.sleep(0.5) 
             st.rerun()
 
-    # --- RECOMMENDATIONS ---
+    # Recommendations
     st.markdown("<br>", unsafe_allow_html=True)
-    if st.session_state.animation_trigger == "footprint" and category in GREEN_ALTERNATIVES:
+    if st.session_state.display_trigger == "footprint" and category in GREEN_ALTERNATIVES:
         last_co2 = st.session_state.purchases[-1]['co2'] if st.session_state.purchases else 0
         st.error(f"🛑 High Impact Detected! ({last_co2:.1f}kg CO₂)")
-        
         st.markdown(f"""
-        <div style="background-color: #fffde7; padding: 15px; border-radius: 10px; border: 2px solid #fbc02d; margin-top: 10px;">
-            <p style="color: #004d40; font-weight: 800; font-size: 18px; margin: 0;">
-                ✅ Try these greener options instead:
-            </p>
-            <p style="color: #000000; font-weight: bold; font-size: 16px; margin-top: 5px;">
-                {', '.join(GREEN_ALTERNATIVES[category])}
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
+        <div style="background-color: #fffde7; padding: 15px; border-radius: 10px; border: 2px solid #fbc02d;">
+            <p style="color: #000; font-weight: 800; margin: 0;">✅ Try these instead:</p>
+            <p style="color: #000; margin-top: 5px;">{', '.join(GREEN_ALTERNATIVES[category])}</p>
+        </div>""", unsafe_allow_html=True)
     
-    st.markdown(f"""
-    <div class="tip-box">
-        {random.choice(ECO_TIPS)}
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(f"<div style='background-color:#e1f5fe; padding:15px; border-radius:10px; border:2px dashed #0288d1; color:#000;'><b>Tip:</b> {random.choice(ECO_TIPS)}</div>", unsafe_allow_html=True)
 
+# --- VISUALS ---
 with c2:
     st.subheader("🎨 Turtle Canvas")
-    if st.session_state.animation_trigger:
-        animate_turtle(st.session_state.animation_trigger)
-        st.session_state.animation_trigger = None 
+    if st.session_state.display_trigger:
+        # Show Static Drawing (No Animation)
+        fig = show_turtle_drawing(st.session_state.display_trigger)
+        st.pyplot(fig, use_container_width=False)
+        # New Animation: Snow/Confetti
+        if st.session_state.display_trigger == "leaf":
+            st.snow()
     else:
         st.markdown("""
-        <div style="text-align:center; padding: 50px; border: 3px dashed #00695c; border-radius: 20px; background-color: rgba(255,255,255,0.5);">
+        <div style="text-align:center; padding: 50px; border: 3px dashed #00695c; border-radius: 20px;">
             <h1 style="font-size: 50px;">🐢</h1>
-            <p style="font-weight:bold; font-size:18px;">I'm waiting to draw your impact!</p>
-        </div>
-        """, unsafe_allow_html=True)
+            <p style="font-weight:bold; color:black;">Waiting to draw!</p>
+        </div>""", unsafe_allow_html=True)
 
 st.markdown("---")
-# --- CHARTS ---
 st.subheader("📊 Visual Analytics")
 if st.session_state.purchases:
     chart_data = pd.DataFrame(st.session_state.purchases)
-    tab1, tab2 = st.tabs(["📉 CO₂ Trend", "📋 Purchase History"])
-    with tab1:
-        st.area_chart(chart_data.reset_index(), x='index', y='co2', color="#004d40")
-    with tab2:
-        st.dataframe(chart_data[['date', 'item', 'category', 'price', 'co2']], use_container_width=True)
+    t1, t2 = st.tabs(["📉 Trend", "📋 History"])
+    with t1: st.area_chart(chart_data.reset_index(), x='index', y='co2', color="#004d40")
+    with t2: st.dataframe(chart_data[['date', 'item', 'category', 'price', 'co2']], use_container_width=True)
 
 st.markdown("---")
-
-# --- FEEDBACK FORM ---
-st.subheader("💌 We value your feedback!")
-st.markdown('<p style="font-weight:bold; color:#00251a; font-size:18px;">Help us make ShopImpact better for everyone.</p>', unsafe_allow_html=True)
-
-with st.form("feedback_form"):
-    c_feed1, c_feed2 = st.columns(2)
-    with c_feed1:
-        name = st.text_input("Name (Optional)")
-        rating = st.slider("Rate your experience (1-5)", 1, 5, 5)
-    with c_feed2:
-        comments = st.text_area("Any suggestions or features you'd like?")
-        
-    submit_feedback = st.form_submit_button("Submit Feedback")
-    
-    if submit_feedback:
-        st.success("✅ Thank you for your feedback! We are listening.")
-        st.toast("Feedback received!", icon="📩")
+st.subheader("💌 Feedback")
+st.markdown('<p style="font-weight:bold; color:#000;">Help us make ShopImpact better.</p>', unsafe_allow_html=True)
+with st.form("feed"):
+    c_f1, c_f2 = st.columns(2)
+    with c_f1: 
+        st.text_input("Name")
+        st.slider("Rate (1-5)", 1, 5, 5)
+    with c_f2: st.text_area("Comments")
+    if st.form_submit_button("Submit"):
+        st.success("Thanks for the feedback!")
