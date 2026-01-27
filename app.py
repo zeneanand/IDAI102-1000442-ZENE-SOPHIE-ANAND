@@ -14,7 +14,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- CSS STYLING (Force Black Text & Light Theme) ---
+# --- CSS STYLING ---
 st.markdown("""
     <style>
     /* FORCE LIGHT THEME BACKGROUND */
@@ -26,7 +26,7 @@ st.markdown("""
         background-color: #ffffff;
     }
 
-    /* FORCE ALL TEXT TO BLACK/DARK */
+    /* FORCE ALL STANDARD TEXT TO BLACK */
     h1, h2, h3, h4, h5, h6, p, div, span, label, li {
         color: #000000 !important;
         font-family: 'Verdana', sans-serif;
@@ -35,12 +35,35 @@ st.markdown("""
     /* Specific Headers */
     h1 { font-family: 'Comic Sans MS', sans-serif; text-shadow: 1px 1px #80cbc4; color: #004D40 !important; }
     
-    /* Inputs */
-    .stTextInput input, .stNumberInput input, .stSelectbox div, .stTextArea textarea {
-        color: #000000 !important;
-        background-color: #ffffff !important;
+    /* === DROPDOWN (SELECTBOX) STYLING === */
+    /* This targets the box where "Fast Fashion", "Sustainable Wear" etc appear */
+    
+    /* The main box background */
+    div[data-baseweb="select"] > div {
+        background-color: #004D40 !important; /* Dark Teal Background */
+        border-color: #004D40 !important;
     }
-    /* Input Labels */
+    
+    /* The Text inside the box (Selection) - FORCE WHITE */
+    div[data-baseweb="select"] span {
+        color: #ffffff !important; 
+        -webkit-text-fill-color: #ffffff !important;
+    }
+    
+    /* The Dropdown Icon */
+    div[data-baseweb="select"] svg {
+        fill: #ffffff !important;
+    }
+
+    /* The Dropdown Options List (When you click it) */
+    ul[data-testid="stSelectboxVirtualDropdown"] li {
+        background-color: #004D40 !important;
+        color: #ffffff !important;
+    }
+    
+    /* === END DROPDOWN STYLING === */
+
+    /* Input Labels (The text "Category", "Price" etc) */
     .stSelectbox label, .stNumberInput label, .stTextInput label, .stSlider label {
         color: #000000 !important;
         font-weight: 900 !important;
@@ -54,7 +77,7 @@ st.markdown("""
         font-weight: 900; 
     }
     div[data-testid="stMetricLabel"] { 
-        color: #000000 !important; /* Black Labels */
+        color: #263238 !important; /* Dark Slate Gray Labels */
         font-weight: 900; 
         font-size: 1.2rem; 
     }
@@ -120,7 +143,7 @@ if 'badges' not in st.session_state:
 # --- STATIC TURTLE ENGINE (No Loop Animation) ---
 def show_turtle_drawing(drawing_type):
     """
-    Displays a static drawing instantly using Matplotlib (No animation loop).
+    Displays a static drawing instantly using Matplotlib.
     """
     fig, ax = plt.subplots(figsize=(4, 4))
     ax.set_aspect('equal')
@@ -142,7 +165,7 @@ def show_turtle_drawing(drawing_type):
         y = np.sin(t * 5) * 5
         color, fill, msg, icon = '#ff6f00', '#fff59d', "Badge Unlocked!", "🏆"
 
-    # Draw Instantly (No Loop)
+    # Draw Instantly
     ax.fill(x, y, color=fill, alpha=0.6)
     ax.plot(x, y, color=color, linewidth=3)
     ax.text(0, 0, f"{icon}\n{msg}", ha='center', va='center', fontsize=14, fontweight='bold', color='#000000')
@@ -210,9 +233,9 @@ with c1:
         brand = st.text_input("Brand", "Generic")
         
         if st.button("🚀 Calculate Impact"):
-            # New Animation: Spinner instead of Turtle Draw
+            # New Animation: Spinner
             with st.spinner("🐢 Turtle is calculating..."):
-                time.sleep(0.8) # Small delay for effect
+                time.sleep(0.8) 
                 
             co2_val = price * IMPACT_MULTIPLIERS[category]
             multiplier = IMPACT_MULTIPLIERS[category]
@@ -264,10 +287,9 @@ with c1:
 with c2:
     st.subheader("🎨 Turtle Canvas")
     if st.session_state.display_trigger:
-        # Show Static Drawing (No Animation)
+        # Show Static Drawing
         fig = show_turtle_drawing(st.session_state.display_trigger)
         st.pyplot(fig, use_container_width=False)
-        # New Animation: Snow/Confetti
         if st.session_state.display_trigger == "leaf":
             st.snow()
     else:
