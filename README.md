@@ -1,11 +1,14 @@
 
 
 # 🌍 ShopImpact — The Mindful Shopping Companion
-
 **Student Name:** Zene Sophie Anand
+
 **Student ID:** AN02720
+
 **Course:** Artificial Intelligence | Python Programming
+
 **Assessment Type:** Summative Assessment
+
 **Project Title:** Design and Deploy an Interactive Python Application
 
 ---
