@@ -51,7 +51,7 @@ st.markdown("""
     .badge-red { border-color: #c62828; }
 
     .trophy-item {
-        background-color: #fff9c4; border: 2px solid #fbc02d; border-radius: 10px;
+ ƒ       background-color: #fff9c4; border: 2px solid #fbc02d; border-radius: 10px;
         padding: 10px; text-align: center; font-weight: bold; color: #f57f17;
     }
     .tip-box {
@@ -193,7 +193,7 @@ if st.session_state.purchases:
             
         st.markdown(f"""
         <div class="badge-card {b_class}">
-            <h3 style="color:#000; margin:0;">{b_icon} Level</h3>
+            <h3 style="color:black; margin:0;">{b_icon} Level</h3>
             <p style="font-weight:bold; font-size:18px; margin:0;">{b_name}</p>
         </div>
         """, unsafe_allow_html=True)
@@ -210,7 +210,7 @@ with c1:
     with st.container():
         item_name = st.text_input("Item Name", placeholder="e.g. Vintage Jacket")
         category = st.selectbox("Category (Determines Impact)", list(IMPACT_MULTIPLIERS.keys()))
-        price = st.number_input("Price ($)", min_value=1.0, value=20.0)
+        price = st.number_input("Price (rs)", min_value=1.0, value=20.0)
         brand = st.text_input("Brand", "Generic")
         
         if st.button("🚀 Calculate Impact"):
