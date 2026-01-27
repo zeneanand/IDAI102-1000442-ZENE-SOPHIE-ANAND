@@ -1,57 +1,130 @@
-#  ShopImpact: The Colorful Eco-Tracker
+🌍 ShopImpact — The Mindful Shopping Companion
+Student Name: zene Student ID:  AN02720 Course: Artificial Intelligence | Python Programming Assessment Type: Summative Assessment Project Title: Design and Deploy an Interactive Python Application
 
-ShopImpact is a vibrant, interactive Python web app designed to make sustainable shopping fun. It combines **real-time data analytics** with **playful "Turtle" animations** to visualize the environmental cost of your purchases.
+📋 Project Overview
+ShopImpact is an interactive web application built using Python and Streamlit that transforms expense tracking into a visual, eco-conscious experience.
 
-## Key Features
-* **Colorful & Interactive:** A bright, nature-inspired UI (Mint, Ocean Blue, Sun Yellow).
-* **Animated Turtle Graphics:** Watch a virtual turtle draw a "Leaf" (good choice) or "Footprint" (high impact) in real-time.
-* ** Live Dashboard:** Instant updates on spending and Carbon Footprint.
-* ** Badges & Gamification:** Earn "Eco Warrior" status by making green choices.
-* ** Smart Suggestions:** Get alerts and greener brand alternatives for high-impact items.
+Unlike standard budget trackers, ShopImpact focuses on the environmental cost of shopping. It uses a unique "Virtual Turtle" visualization engine—powered by Matplotlib—that draws specific graphics (a green leaf or a red footprint) based on the sustainability of the user's purchase. The project gamifies sustainable living through a "Trophy Case" system, encouraging users to make better choices to unlock digital rewards.
 
----
+❗ Problem Statement
+While many consumers want to shop sustainably, the immediate environmental impact of a purchase is often invisible.
 
-##  App Screenshots & Design
+Lack of Feedback: Shoppers rarely see the CO₂ cost of "Fast Fashion" vs. "Thrift" at the moment of purchase.
 
-### 1. The Interface
-*(Replace this line with a screenshot of your running app showing the dashboard)*
-![Dashboard Screenshot](insert_your_screenshot_here.png)
+Boring Tools: Standard carbon calculators are often dry forms full of numbers, lacking engagement.
 
-### 2. Design Wireframes / Sketches
-*Below are the initial rough sketches used to design the UI layout and Turtle area.*
+This project solves this by providing instant visual feedback via the Turtle avatar and positive reinforcement through gamified badges.
 
-**(Instructions: Draw a simple box on paper. Put inputs on left, a turtle on right. Take a photo and link it here)**
-![Wireframe Sketch](insert_your_sketch_photo_here.jpg)
+🎯 Project Objectives
+Core Python Application: Demonstrate proficiency in lists, dictionaries, loop logic, and external libraries (Pandas, Matplotlib, NumPy).
 
----
+Interactive Visualization: Move beyond standard charts by creating a custom drawing engine that renders shapes programmatically.
 
-## How to Run
+State Management: Utilize st.session_state to persist user data, history, and unlocked achievements across app reruns.
 
-1.  **Install Requirements:**
-    ```bash
-    pip install -r requirements.txt
-    ```
+UI/UX Design: Implement custom CSS to force a cohesive "Earth & Mint" aesthetic, ensuring high contrast and accessibility.
 
-2.  **Launch the App:**
-    ```bash
-    streamlit run app.py
-    ```
+✨ Key Features
+🛒 Core Functionality
+Smart Inputs: Fields for Item Name, Category (dropdown), Price, and Brand.
 
-3.  **Enjoy:** Open the link (usually `localhost:8501`) in your browser.
+Logic-Based Calculation: Uses a dictionary of multipliers to convert financial cost into environmental cost ($ Price × Impact Factor = CO₂).
 
----
+Better Alternatives: Automatically detects high-impact categories (like Fast Fashion) and suggests greener options (like ThredUp or Depop).
 
-##  "Turtle" Graphics Logic
-Because standard Python `turtle` crashes in web browsers, this app uses a custom **Matplotlib Animation Engine**.
-* It calculates geometry for leaves and footprints.
-* It uses `time.sleep()` and iterative plotting to simulate the "drawing" motion of a turtle stroke-by-stroke.
+🎮 Gamification: The Trophy Case
+Instead of a generic leaderboard, users build a personal collection of achievements.
 
----
+Unlock Logic: Badges are awarded based on specific conditions (e.g., buying second-hand).
 
-## Tech Stack
-* **Python** (Logic)
-* **Streamlit** (Frontend & Interactivity)
-* **Matplotlib** (Animation & Graphics)
-* **Pandas** (Data Management)
+Celebration: Uses st.balloons() and toast notifications to celebrate positive user behavior.
 
-Made with  for a greener planet.
+🎨 The "Virtual Turtle" Engine
+A custom-built graphics module using Matplotlib:
+
+Leaf Drawing: Renders if the purchase has a low impact multiplier.
+
+Footprint Drawing: Renders if the purchase has a high impact multiplier.
+
+Trophy Drawing: Renders when a new badge is unlocked.
+
+Technical Note: This removes the need for static image files, drawing shapes mathematically using NumPy arrays (Sine/Cosine waves) in real-time.
+
+🏆 Gamification System (Implemented Logic)
+The system rewards specific sustainable actions. The logic checks every purchase against the user's history in session_state.
+
+🎨 User Interface Design
+The app enforces a specific theme to ensure readability and brand identity:
+
+Background: A linear gradient from Soft Mint (#e0f7fa) to Beige (#e8f5e9).
+
+Typography: Dark Midnight Green (#102A2E) and Dark Teal (#004D40) for headers to ensure high contrast against the light background.
+
+Custom Components:
+
+Dropdowns: Styled with a Dark Teal background and White text for visibility.
+
+Metrics: "Total Spent" and "Total CO₂" use color coding (Teal numbers, Dark Gray labels) for professional clarity.
+
+🔧 Technical Architecture
+Technologies Used
+Python: The backbone logic.
+
+Streamlit: The frontend framework.
+
+Matplotlib & NumPy: The geometry engine for the Turtle drawings.
+
+Pandas: Data manipulation for the history table and area charts.
+
+Data Structures
+IMPACT_MULTIPLIERS (Dictionary): Maps categories to CO₂ factors.
+
+session_state.purchases (List of Dictionaries): Stores the transaction history (date, item, category, price, co2).
+
+session_state.badges (List): Stores unique unlocked achievements.
+
+📁 Project Structure
+📁 Project Development Stages
+🧠 Stage 1: Planning & Design
+The project began with a whiteboard session to define the target users (Students, Eco-conscious families) and the core "Emotion" of the app: Fun, not guilt. I sketched the initial layout to ensure the Dashboard and Feedback panels were organized.
+
+I then created a low-fidelity wireframe to map out where the "Turtle," the inputs, and the Monthly Dashboard would sit on the screen.
+
+🧮 Stage 2: Logic & Graphics
+Developed the IMPACT_MULTIPLIERS dictionary to drive the math.
+
+Built the show_turtle_drawing() function. Initially, this was an animation loop, but for performance and stability on the web, it was optimized to render static, transparent figures instantly.
+
+🖥️ Stage 3: UI Refinement
+Implemented aggressive CSS injection to fix Streamlit's default dark/light mode conflicts.
+
+Ensured the "Turtle Canvas" was transparent so drawings looked native to the app background.
+
+🚀 Stage 4: Deployment
+Deployed to Streamlit Cloud.
+
+Verified that requirements.txt included matplotlib to prevent runtime errors in the cloud environment.
+
+🚀 Installation & Local Execution
+Clone or Download the project folder.
+
+Install Dependencies:
+
+Run the Application:
+
+Access: Open the local URL provided in the terminal (usually http://localhost:8501).
+
+🌐 Live Web App Link
+https://idai102-1000442-zene-sophie-anand-dxqlgjrqxrw3kpekeefygd.streamlit.app/
+
+🌱 Ethical & Social Considerations
+Positive Reinforcement: The app deliberately uses "Gamification" (Badges/Trophies) rather than shame to encourage behavior change.
+
+Educational Estimates: The CO₂ values are simplified multipliers intended for awareness, teaching users relative impact (e.g., that leather is much higher impact than bamboo) rather than perfect scientific measurement.
+
+📚 References
+Streamlit Documentation
+
+Matplotlib Plotting Guidelines
+
+Python Software Foundation
