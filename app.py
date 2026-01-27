@@ -46,10 +46,10 @@ st.markdown("""
         font-weight: bold !important;
     }
 
-    /* METRICS - NEW COLOR (Deep Navy Blue) */
+    /* METRICS - NEW COLOR (Dark Blue) */
     div[data-testid="stMetricValue"] {
         font-size: 2.4rem;
-        color: #0d47a1 !important; /* Changed to Deep Navy Blue */
+        color: #0d47a1 !important; /* Changed to Dark Blue */
         font-weight: 900;
     }
     div[data-testid="stMetricLabel"] {
@@ -396,12 +396,3 @@ with st.form("feedback_form"):
     if submit_feedback:
         st.success("✅ Thank you for your feedback! We are listening.")
         st.toast("Feedback received!", icon="📩")
-                    
-        
-                
-        
-        
-        
-    
-
-
