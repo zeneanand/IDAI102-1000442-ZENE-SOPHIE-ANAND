@@ -291,7 +291,7 @@ with c2:
         fig = show_turtle_drawing(st.session_state.display_trigger)
         st.pyplot(fig, use_container_width=False)
         if st.session_state.display_trigger == "leaf":
-            st.ballon()
+            st.balloon()
     else:
         st.markdown("""
         <div style="text-align:center; padding: 50px; border: 3px dashed #00695c; border-radius: 20px;">
