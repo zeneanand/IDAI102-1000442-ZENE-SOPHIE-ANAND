@@ -1,8 +1,4 @@
-I apologize for the code getting cut off in the previous response. Here is the **complete, fully functional code** with the font colors updated to **Dark Teal** (numbers) and **Dark Slate Gray** (labels).
 
-**Replace your entire `app.py` file with this:**
-
-```python
 import streamlit as st
 import pandas as pd
 import random
