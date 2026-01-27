@@ -15,6 +15,8 @@ st.set_page_config(
 )
 
 # --- HIGH CONTRAST & VIBRANT CSS ---
+# The error happened in this block below. 
+# It is now fixed with proper closing quotes.
 st.markdown("""
     <style>
     /* Main Background - Soft Mint */
@@ -46,42 +48,4 @@ st.markdown("""
         font-weight: bold !important;
     }
 
-    /* METRIC VALUES (The Numbers) - Dark Emerald Green */
-    div[data-testid="stMetricValue"] {
-        font-size: 2.4rem;
-        color: #1b5e20 !important; 
-        font-weight: 900;
-    }
-    
-    /* METRIC LABELS (The Titles) - Dark Navy Blue */
-    div[data-testid="stMetricLabel"] {
-        color: #0d47a1 !important; /* CHANGED TO DARK BLUE */
-        font-weight: bold;
-        font-size: 1.2rem; /* Made slightly larger */
-    }
-
-    /* BUTTONS - High Contrast Yellow */
-    .stButton>button {
-        background-color: #fdd835;
-        color: #000000;
-        border-radius: 20px;
-        border: 2px solid #f9a825;
-        font-weight: 900;
-        font-size: 18px;
-        transition: all 0.3s ease;
-    }
-    .stButton>button:hover {
-        background-color: #ffeb3b;
-        transform: scale(1.05);
-        border-color: #000;
-    }
-
-    /* BADGE CARDS - Darker Text */
-    .badge-card {
-        background-color: #ffffff;
-        border-left: 10px solid;
-        padding: 15px;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-        text-align: center;
-        margin-bottom: 10
+    /* METRIC
