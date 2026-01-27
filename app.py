@@ -326,5 +326,3 @@ with st.form("feedback_form"):
     if submit_feedback:
         st.success("✅ Thank you for your feedback! We are listening.")
         st.toast("Feedback received!", icon="📩")
-
-```
