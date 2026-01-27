@@ -46,16 +46,18 @@ st.markdown("""
         font-weight: bold !important;
     }
 
-    /* METRICS - NEW COLOR (Dark Blue) */
+    /* METRIC VALUES (The Numbers) - Dark Emerald Green */
     div[data-testid="stMetricValue"] {
         font-size: 2.4rem;
-        color: #0d47a1 !important; /* Changed to Dark Blue */
+        color: #1b5e20 !important; 
         font-weight: 900;
     }
+    
+    /* METRIC LABELS (The Text "Total Spent") - DARK BLUE */
     div[data-testid="stMetricLabel"] {
-        color: #000000 !important; /* Pure Black for Labels */
+        color: #0d47a1 !important; /* Changed to Dark Navy Blue */
         font-weight: bold;
-        font-size: 1.1rem;
+        font-size: 1.2rem;
     }
 
     /* BUTTONS - High Contrast Yellow */
