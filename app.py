@@ -155,15 +155,15 @@ def show_turtle_drawing(drawing_type):
     if drawing_type == "leaf":
         x = 16 * np.sin(t)**3
         y = (13 * np.cos(t) - 5 * np.cos(2*t) - 2 * np.cos(3*t) - np.cos(4*t)) * 1.2
-        color, fill, msg, icon = '#1b5e20', '#a5d6a7', "Eco Hero!", "🌿"
+        color, fill, msg, icon = '🌿', '#a5d6a7', "Eco Hero!", "🌿"
     elif drawing_type == "footprint":
         x = 0.5 * np.cos(t)
         y = 1.0 * np.sin(t)
-        color, fill, msg, icon = '#b71c1c', '#ef9a9a', "High Impact", "👣"
+        color, fill, msg, icon = '👣', '#ef9a9a', "High Impact", "👣"
     else: # Badge
         x = np.cos(t * 5) * 5
         y = np.sin(t * 5) * 5
-        color, fill, msg, icon = '#ff6f00', '#fff59d', "Badge Unlocked!", "🏆"
+        color, fill, msg, icon = '🏆', '#fff59d', "Badge Unlocked!", "🏆"
 
     # Draw Instantly
     ax.fill(x, y, color=fill, alpha=0.6)
