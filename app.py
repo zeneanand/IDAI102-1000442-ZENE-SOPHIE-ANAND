@@ -314,14 +314,14 @@ with st.form("feed"):
     with c_f1: 
         st.markdown("""
         <div style="background-color: #ffffff; padding: 10px; border-radius: 10px;">
-            <input type="text" placeholder="Name" style="width:100%; padding:5px; border-radius:5px; border:1px solid #ccc; color:#000;">
+            <input type="text" placeholder="Name" style="width:100%; padding:5px; border-radius:5px; border:1px solid #ccc; color:white;">
         </div>
         """, unsafe_allow_html=True)
         st.slider("Rate (1-5)", 1, 5, 5)
     with c_f2: 
         st.markdown("""
         <div style="background-color: #ffffff; padding: 10px; border-radius: 10px;">
-            <textarea placeholder="Comments" style="width:100%; padding:5px; border-radius:5px; border:1px solid #ccc; color:#000;"></textarea>
+            <textarea placeholder="Comments" style="width:100%; padding:5px; border-radius:5px; border:1px solid #ccc; color:white;"></textarea>
         </div>
         """, unsafe_allow_html=True)
     if st.form_submit_button("Submit"):
