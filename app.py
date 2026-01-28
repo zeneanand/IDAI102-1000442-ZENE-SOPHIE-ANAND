@@ -293,9 +293,11 @@ with c2:
         if st.session_state.display_trigger == "leaf":
             st.balloons()
        else:
-           
-    st.markdown("<p style='text-align:center; color:#555;'>Add an item to wake the turtle 🐢</p>", unsafe_allow_html=True)
-
+    st.markdown("""
+    <div style="text-align:center; padding: 50px; border: 3px dashed #00695c; border-radius: 20px;">
+        <h1 style="font-size: 50px;">🐢</h1>
+        <p style="font-weight:bold; color:black;">Waiting to draw!</p>
+    </div>""", unsafe_allow_html=True)
 st.markdown("---")
 st.subheader("📊 Visual Analytics")
 if st.session_state.purchases:
