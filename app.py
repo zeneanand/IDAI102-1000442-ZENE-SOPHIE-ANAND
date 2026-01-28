@@ -159,17 +159,19 @@ def show_turtle_drawing(drawing_type):
         color = "#fff59d"
 
     svg = f"""
+    <div style="text-align:center;">
     <svg width="320" height="320" viewBox="0 0 320 320"
-         xmlns="http://www.w3.org/2000/svg">
+         xmlns="http://www.w3.org/2000/svg"
+         style="overflow:visible;">
 
-        <!-- soft background blob / turtle shell -->
+        <!-- turtle shell -->
         <ellipse cx="160" cy="170" rx="110" ry="90"
                  fill="{color}" opacity="0.75"/>
 
         <!-- turtle head -->
         <circle cx="160" cy="70" r="25" fill="{color}" />
 
-        <!-- emoji in center -->
+        <!-- emoji -->
         <text x="160" y="170"
               text-anchor="middle"
               dominant-baseline="middle"
@@ -177,7 +179,7 @@ def show_turtle_drawing(drawing_type):
             {emoji}
         </text>
 
-        <!-- label below -->
+        <!-- label -->
         <text x="160" y="260"
               text-anchor="middle"
               font-size="20"
@@ -186,6 +188,7 @@ def show_turtle_drawing(drawing_type):
             {label}
         </text>
     </svg>
+    </div>
     """
     return svg
 
