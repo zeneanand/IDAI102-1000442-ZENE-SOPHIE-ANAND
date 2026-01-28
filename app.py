@@ -143,54 +143,28 @@ if 'badges' not in st.session_state:
     st.session_state.badges = []
 def show_turtle_drawing(drawing_type):
     """
-    Displays a static drawing using SVG (emoji-safe) for Streamlit.
+    Simple emoji-based turtle canvas for Streamlit.
     """
     if drawing_type == "leaf":
         emoji = "🌿"
         label = "Eco Hero!"
-        color = "#a5d6a7"
     elif drawing_type == "footprint":
         emoji = "👣"
         label = "High Impact"
-        color = "#ef9a9a"
     else:  # badge
         emoji = "🏆"
         label = "Badge Unlocked!"
-        color = "#fff59d"
 
-    svg = f"""
-    <div style="text-align:center;">
-    <svg width="320" height="320" viewBox="0 0 320 320"
-         xmlns="http://www.w3.org/2000/svg"
-         style="overflow:visible;">
-
-        <!-- turtle shell -->
-        <ellipse cx="160" cy="170" rx="110" ry="90"
-                 fill="{color}" opacity="0.75"/>
-
-        <!-- turtle head -->
-        <circle cx="160" cy="70" r="25" fill="{color}" />
-
-        <!-- emoji -->
-        <text x="160" y="170"
-              text-anchor="middle"
-              dominant-baseline="middle"
-              font-size="72">
-            {emoji}
-        </text>
-
-        <!-- label -->
-        <text x="160" y="260"
-              text-anchor="middle"
-              font-size="20"
-              font-weight="bold"
-              fill="#000">
+    # Simple HTML block with big emoji and label
+    html_content = f"""
+    <div style="text-align:center; padding: 50px; border-radius: 20px; background: #e0f7fa;">
+        <div style="font-size: 100px;">{emoji}</div>
+        <div style="font-size: 24px; font-weight:bold; margin-top:10px; color:#000;">
             {label}
-        </text>
-    </svg>
+        </div>
     </div>
     """
-    return svg
+    return html_content
 
 
 
