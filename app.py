@@ -278,23 +278,25 @@ with c1:
         </div>""", unsafe_allow_html=True)
     
     st.markdown(f"<div style='background-color:#e1f5fe; padding:15px; border-radius:10px; border:2px dashed #0288d1; color:#000;'><b>Tip:</b> {random.choice(ECO_TIPS)}</div>", unsafe_allow_html=True)
-
-# --- VISUALS ---
 with c2:
     st.subheader("🎨 Turtle Canvas")
+    
     if st.session_state.display_trigger:
-        # Show Static Drawing
+        # Show the emoji/turtle drawing
         html_content = show_turtle_drawing(st.session_state.display_trigger)
         st.markdown(html_content, unsafe_allow_html=True)
 
+        # Only balloons for leaf
         if st.session_state.display_trigger == "leaf":
             st.balloons()
-        else:
-            st.markdown("""
-            <div style="text-align:center; padding: 50px; border: 3px dashed #00695c; border-radius: 20px;">
-                <h1 style="font-size: 50px;">🐢</h1>
-                <p style="font-weight:bold; color:black;">Waiting to draw!</p>
-            </div>""", unsafe_allow_html=True)
+    else:
+        # Only show waiting if nothing to draw
+        st.markdown("""
+        <div style="text-align:center; padding: 50px; border: 3px dashed #00695c; border-radius: 20px;">
+            <h1 style="font-size: 50px;">🐢</h1>
+            <p style="font-weight:bold; color:black;">Waiting to draw!</p>
+        </div>""", unsafe_allow_html=True)
+
 st.markdown("---")
 st.subheader("📊 Visual Analytics")
 if st.session_state.purchases:
