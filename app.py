@@ -139,10 +139,10 @@ if 'display_trigger' not in st.session_state:
     st.session_state.display_trigger = None
 if 'badges' not in st.session_state:
     st.session_state.badges = []
-
 def show_turtle_drawing(drawing_type):
     """
     Displays a static drawing instantly using Matplotlib.
+    Emojis are NOT drawn here (Matplotlib limitation).
     """
     fig, ax = plt.subplots(figsize=(4, 4))
     ax.set_aspect('equal')
@@ -160,7 +160,6 @@ def show_turtle_drawing(drawing_type):
         line_color = '#1b5e20'
         fill_color = '#a5d6a7'
         msg = "Eco Hero!"
-        icon = "🌿"
 
     elif drawing_type == "footprint":
         x = 0.8 * np.cos(t)
@@ -168,7 +167,6 @@ def show_turtle_drawing(drawing_type):
         line_color = '#b71c1c'
         fill_color = '#ef9a9a'
         msg = "High Impact"
-        icon = "👣"
 
     else:  # badge
         x = np.cos(t * 5) * 5
@@ -176,24 +174,24 @@ def show_turtle_drawing(drawing_type):
         line_color = '#ff6f00'
         fill_color = '#fff59d'
         msg = "Badge Unlocked!"
-        icon = "🏆"
 
     # Draw shape
     ax.fill(x, y, color=fill_color, alpha=0.7)
     ax.plot(x, y, color=line_color, linewidth=3)
 
-    # Emoji + text (this is where emojis belong)
+    # Text only (NO emojis here)
     ax.text(
-        0, 0,
-        f"{icon}\n{msg}",
+        0, -0.3,
+        msg,
         ha='center',
         va='center',
-        fontsize=16,
+        fontsize=14,
         fontweight='bold',
         color='#000000'
     )
 
     return fig
+
 
 
 # --- SIDEBAR ---
