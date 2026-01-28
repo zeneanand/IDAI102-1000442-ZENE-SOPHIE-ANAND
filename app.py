@@ -143,63 +143,51 @@ if 'badges' not in st.session_state:
     st.session_state.badges = []
 def show_turtle_drawing(drawing_type):
     """
-    Displays a static drawing instantly using Matplotlib WITH emojis.
+    Displays a static drawing using SVG (emoji-safe) for Streamlit.
     """
-    from matplotlib import font_manager
-
-    fig, ax = plt.subplots(figsize=(4, 4))
-    ax.set_aspect('equal')
-    ax.axis('off')
-
-    fig.patch.set_alpha(0)
-    ax.set_facecolor("none")
-
-    # Load emoji font (Linux / Streamlit Cloud)
-    emoji_font = font_manager.FontProperties(
-        fname="/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf"
-    )
-
-    t = np.linspace(0, 2*np.pi, 200)
-
     if drawing_type == "leaf":
-        x = 16 * np.sin(t)**3
-        y = (13*np.cos(t) - 5*np.cos(2*t) - 2*np.cos(3*t) - np.cos(4*t)) * 1.2
-        line_color = '#1b5e20'
-        fill_color = '#a5d6a7'
-        msg = "Eco Hero!"
-        icon = "🌿"
-
+        emoji = "🌿"
+        label = "Eco Hero!"
+        color = "#a5d6a7"
     elif drawing_type == "footprint":
-        x = 0.8 * np.cos(t)
-        y = 1.2 * np.sin(t)
-        line_color = '#b71c1c'
-        fill_color = '#ef9a9a'
-        msg = "High Impact"
-        icon = "👣"
-
+        emoji = "👣"
+        label = "High Impact"
+        color = "#ef9a9a"
     else:  # badge
-        x = np.cos(t * 5) * 5
-        y = np.sin(t * 5) * 5
-        line_color = '#ff6f00'
-        fill_color = '#fff59d'
-        msg = "Badge Unlocked!"
-        icon = "🏆"
+        emoji = "🏆"
+        label = "Badge Unlocked!"
+        color = "#fff59d"
 
-    ax.fill(x, y, color=fill_color, alpha=0.7)
-    ax.plot(x, y, color=line_color, linewidth=3)
+    svg = f"""
+    <svg width="320" height="320" viewBox="0 0 320 320"
+         xmlns="http://www.w3.org/2000/svg">
 
-    # Emoji + text (NOW WORKS)
-    ax.text(
-        0, 0,
-        f"{icon}\n{msg}",
-        ha='center',
-        va='center',
-        fontsize=18,
-        fontproperties=emoji_font,
-        color='black'
-    )
+        <!-- soft background blob / turtle shell -->
+        <ellipse cx="160" cy="170" rx="110" ry="90"
+                 fill="{color}" opacity="0.75"/>
 
-    return fig
+        <!-- turtle head -->
+        <circle cx="160" cy="70" r="25" fill="{color}" />
+
+        <!-- emoji in center -->
+        <text x="160" y="170"
+              text-anchor="middle"
+              dominant-baseline="middle"
+              font-size="72">
+            {emoji}
+        </text>
+
+        <!-- label below -->
+        <text x="160" y="260"
+              text-anchor="middle"
+              font-size="20"
+              font-weight="bold"
+              fill="#000">
+            {label}
+        </text>
+    </svg>
+    """
+    return svg
 
 
 
