@@ -284,8 +284,9 @@ with c2:
     st.subheader("🎨 Turtle Canvas")
     if st.session_state.display_trigger:
         # Show Static Drawing
-        fig = show_turtle_drawing(st.session_state.display_trigger)
-        st.pyplot(fig, use_container_width=False)
+        html_content = show_turtle_drawing(st.session_state.display_trigger)
+        st.markdown(html_content, unsafe_allow_html=True)
+
         if st.session_state.display_trigger == "leaf":
             st.balloons()
         else:
