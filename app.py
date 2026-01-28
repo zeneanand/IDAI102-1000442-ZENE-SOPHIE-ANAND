@@ -15,6 +15,19 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+st.markdown("""
+    <style>
+    /* Feedback submit button styling */
+    form[id="feed"] button {
+        background-color: #ffffff !important; /* White background */
+        color: #000000 !important;           /* Black font */
+        font-weight: bold;
+        border: 2px solid #0288d1;
+        border-radius: 8px;
+        padding: 8px 16px;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 # --- CSS STYLING ---
 st.markdown("""
@@ -312,17 +325,8 @@ st.markdown('<p style="font-weight:bold; color:#000;">Help us make ShopImpact be
 with st.form("feed"):
     c_f1, c_f2 = st.columns(2)
     with c_f1: 
-        st.markdown("""
-        <div style="background-color: #ffffff; padding: 10px; border-radius: 10px;">
-            <input type="text" placeholder="Name" style="width:100%; padding:5px; border-radius:5px; border:1px solid #ccc; color:white;">
-        </div>
-        """, unsafe_allow_html=True)
+        st.text_input("Name")
         st.slider("Rate (1-5)", 1, 5, 5)
-    with c_f2: 
-        st.markdown("""
-        <div style="background-color: #ffffff; padding: 10px; border-radius: 10px;">
-            <textarea placeholder="Comments" style="width:100%; padding:5px; border-radius:5px; border:1px solid #ccc; color:white;"></textarea>
-        </div>
-        """, unsafe_allow_html=True)
+    with c_f2: st.text_area("Comments")
     if st.form_submit_button("Submit"):
         st.success("Thanks for the feedback!")
