@@ -4,6 +4,8 @@ import random
 import matplotlib.pyplot as plt
 import numpy as np
 import time
+from matplotlib import font_manager
+
 from datetime import datetime
 
 # --- CONFIGURATION ---
@@ -141,16 +143,21 @@ if 'badges' not in st.session_state:
     st.session_state.badges = []
 def show_turtle_drawing(drawing_type):
     """
-    Displays a static drawing instantly using Matplotlib.
-    Emojis are NOT drawn here (Matplotlib limitation).
+    Displays a static drawing instantly using Matplotlib WITH emojis.
     """
+    from matplotlib import font_manager
+
     fig, ax = plt.subplots(figsize=(4, 4))
     ax.set_aspect('equal')
     ax.axis('off')
 
-    # Transparent background (prevents rectangle look)
     fig.patch.set_alpha(0)
     ax.set_facecolor("none")
+
+    # Load emoji font (Linux / Streamlit Cloud)
+    emoji_font = font_manager.FontProperties(
+        fname="/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf"
+    )
 
     t = np.linspace(0, 2*np.pi, 200)
 
@@ -160,6 +167,7 @@ def show_turtle_drawing(drawing_type):
         line_color = '#1b5e20'
         fill_color = '#a5d6a7'
         msg = "Eco Hero!"
+        icon = "🌿"
 
     elif drawing_type == "footprint":
         x = 0.8 * np.cos(t)
@@ -167,6 +175,7 @@ def show_turtle_drawing(drawing_type):
         line_color = '#b71c1c'
         fill_color = '#ef9a9a'
         msg = "High Impact"
+        icon = "👣"
 
     else:  # badge
         x = np.cos(t * 5) * 5
@@ -174,20 +183,20 @@ def show_turtle_drawing(drawing_type):
         line_color = '#ff6f00'
         fill_color = '#fff59d'
         msg = "Badge Unlocked!"
+        icon = "🏆"
 
-    # Draw shape
     ax.fill(x, y, color=fill_color, alpha=0.7)
     ax.plot(x, y, color=line_color, linewidth=3)
 
-    # Text only (NO emojis here)
+    # Emoji + text (NOW WORKS)
     ax.text(
-        0, -0.3,
-        msg,
+        0, 0,
+        f"{icon}\n{msg}",
         ha='center',
         va='center',
-        fontsize=14,
-        fontweight='bold',
-        color='#000000'
+        fontsize=18,
+        fontproperties=emoji_font,
+        color='black'
     )
 
     return fig
