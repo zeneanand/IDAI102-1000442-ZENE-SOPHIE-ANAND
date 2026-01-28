@@ -304,15 +304,25 @@ if st.session_state.purchases:
     t1, t2 = st.tabs(["📉 Trend", "📋 History"])
     with t1: st.area_chart(chart_data.reset_index(), x='index', y='co2', color="#004d40")
     with t2: st.dataframe(chart_data[['date', 'item', 'category', 'price', 'co2']], use_container_width=True)
-
 st.markdown("---")
 st.subheader("💌 Feedback")
+
 st.markdown('<p style="font-weight:bold; color:#000;">Help us make ShopImpact better.</p>', unsafe_allow_html=True)
+
 with st.form("feed"):
     c_f1, c_f2 = st.columns(2)
     with c_f1: 
-        st.text_input("Name")
+        st.markdown("""
+        <div style="background-color: #ffffff; padding: 10px; border-radius: 10px;">
+            <input type="text" placeholder="Name" style="width:100%; padding:5px; border-radius:5px; border:1px solid #ccc; color:#000;">
+        </div>
+        """, unsafe_allow_html=True)
         st.slider("Rate (1-5)", 1, 5, 5)
-    with c_f2: st.text_area("Comments")
+    with c_f2: 
+        st.markdown("""
+        <div style="background-color: #ffffff; padding: 10px; border-radius: 10px;">
+            <textarea placeholder="Comments" style="width:100%; padding:5px; border-radius:5px; border:1px solid #ccc; color:#000;"></textarea>
+        </div>
+        """, unsafe_allow_html=True)
     if st.form_submit_button("Submit"):
         st.success("Thanks for the feedback!")
