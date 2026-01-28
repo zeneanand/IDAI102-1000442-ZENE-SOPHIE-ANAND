@@ -140,7 +140,6 @@ if 'display_trigger' not in st.session_state:
 if 'badges' not in st.session_state:
     st.session_state.badges = []
 
-# --- STATIC TURTLE ENGINE (No Loop Animation) ---
 def show_turtle_drawing(drawing_type):
     """
     Displays a static drawing instantly using Matplotlib.
@@ -148,29 +147,54 @@ def show_turtle_drawing(drawing_type):
     fig, ax = plt.subplots(figsize=(4, 4))
     ax.set_aspect('equal')
     ax.axis('off')
-    fig.patch.set_facecolor('#e0f7fa') 
-    
-    t = np.linspace(0, 2*np.pi, 100)
-    
+
+    # Transparent background (prevents rectangle look)
+    fig.patch.set_alpha(0)
+    ax.set_facecolor("none")
+
+    t = np.linspace(0, 2*np.pi, 200)
+
     if drawing_type == "leaf":
         x = 16 * np.sin(t)**3
-        y = (13 * np.cos(t) - 5 * np.cos(2*t) - 2 * np.cos(3*t) - np.cos(4*t)) * 1.2
-        color, fill, msg, icon = '🌿', '#a5d6a7', "Eco Hero!", "🌿"
+        y = (13*np.cos(t) - 5*np.cos(2*t) - 2*np.cos(3*t) - np.cos(4*t)) * 1.2
+        line_color = '#1b5e20'
+        fill_color = '#a5d6a7'
+        msg = "Eco Hero!"
+        icon = "🌿"
+
     elif drawing_type == "footprint":
-        x = 0.5 * np.cos(t)
-        y = 1.0 * np.sin(t)
-        color, fill, msg, icon = '👣', '#ef9a9a', "High Impact", "👣"
-    else: # Badge
+        x = 0.8 * np.cos(t)
+        y = 1.2 * np.sin(t)
+        line_color = '#b71c1c'
+        fill_color = '#ef9a9a'
+        msg = "High Impact"
+        icon = "👣"
+
+    else:  # badge
         x = np.cos(t * 5) * 5
         y = np.sin(t * 5) * 5
-        color, fill, msg, icon = '🏆', '#fff59d', "Badge Unlocked!", "🏆"
+        line_color = '#ff6f00'
+        fill_color = '#fff59d'
+        msg = "Badge Unlocked!"
+        icon = "🏆"
 
-    # Draw Instantly
-    ax.fill(x, y, color=fill, alpha=0.6)
-    ax.plot(x, y, color=color, linewidth=3)
-    ax.text(0, 0, f"{icon}\n{msg}", ha='center', va='center', fontsize=14, fontweight='bold', color='#000000')
-    
+    # Draw shape
+    ax.fill(x, y, color=fill_color, alpha=0.7)
+    ax.plot(x, y, color=line_color, linewidth=3)
+
+    # Emoji + text (this is where emojis belong)
+    ax.text(
+        0, 0,
+        f"{icon}\n{msg}",
+        ha='center',
+        va='center',
+        fontsize=16,
+        fontweight='bold',
+        color='#000000'
+    )
+
     return fig
+
 
 # --- SIDEBAR ---
 with st.sidebar:
