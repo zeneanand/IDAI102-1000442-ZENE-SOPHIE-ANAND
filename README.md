@@ -140,6 +140,61 @@ I then created a low-fidelity wireframe to map out where the "Turtle," the input
 <img width="1428" height="898" alt="Screenshot 2026-01-29 at 9 12 04 AM" src="https://github.com/user-attachments/assets/e85a988e-773e-4c8e-a052-8be5713fa5e1" />
 <img width="1434" height="492" alt="Screenshot 2026-01-29 at 9 12 22 AM" src="https://github.com/user-attachments/assets/72483d5d-1fad-4b06-b3d3-692e1cc3f372" />
 
+Stage 5: 🔧 Integration Details & 🚀 Deployment Instructions
+🔧 Integration Details
+The ShopImpact application integrates several Python libraries to create a seamless user experience. The integration logic bridges the gap between raw data processing and visual user interaction.
+
+1. The "Turtle" Graphics Engine (Matplotlib + Streamlit)
+The Challenge: Standard drawing libraries (like Python's built-in turtle) open separate desktop windows, which do not work in web browsers.
+
+The Integration: I built a custom rendering engine using matplotlib. The app calculates mathematical coordinates (using numpy) to draw shapes like leaves and footprints.
+
+Seamless UI: To ensure the graphics look native to the app, I integrated specific code (ax.set_axis_off() and fig.patch.set_alpha(0)) to remove all borders and make the plot background completely transparent, allowing it to overlay perfectly on the app's custom background.
+
+2. State Management System
+The Component: st.session_state
+
+The Function: This acts as the application's temporary database. It integrates the user's actions with the display logic.
+
+It preserves the Purchase History list across app re-runs.
+
+It stores Unlocked Badges to ensure users don't lose progress when the page refreshes.
+
+It triggers Animations (Balloons/Snow) only when specific state conditions are met.
+
+3. Data Processing Pipeline
+The app follows a linear integration pipeline:
+
+Input: User selects a category via Streamlit widgets.
+
+Logic: Python dictionaries (IMPACT_MULTIPLIERS) retrieve the specific CO₂ factor.
+
+Storage: Data is appended to a List of Dictionaries.
+
+Visualization: The list is converted into a Pandas DataFrame to generate the Area Charts and Data Tables instantly.
+
+🚀 Deployment Instructions
+This project is designed to be deployed on Streamlit Cloud for easy accessibility. Below are the steps to run the app locally and deploy it to the web.
+
+💻 Part A: Running Locally
+Follow these steps to run ShopImpact on your own machine:
+
+Prerequisites: Ensure you have Python installed (version 3.8 or higher).
+
+Download Code: Place app.py and requirements.txt in a dedicated folder.
+
+Install Dependencies: Open your terminal/command prompt, navigate to the folder, and run:
+
+Bash
+
+pip install -r requirements.txt
+Launch App: Run the following command:
+
+Bash
+
+streamlit run app.py
+Access: The app will open in your default browser at http://localhost:8501.
+
 ## 🚀 Installation & Local Execution
 1. **Clone or Download** the project folder.
 2. **Install Dependencies:**
