@@ -114,6 +114,12 @@ ShopImpact/
 ### 🧠 Stage 1: Planning & Design
 The project began with a whiteboard session to define the target users (Students, Eco-conscious families) and the core "Emotion" of the app: Fun, not guilt. I sketched the initial layout to ensure the Dashboard and Feedback panels were organized.
 I then created a low-fidelity wireframe to map out where the "Turtle," the inputs, and the Monthly Dashboard would sit on the screen.
+![WhatsApp Image 2026-01-29 at 09 17 34](https://github.com/user-attachments/assets/7d099d21-b53e-4848-8d19-e145f88aba4a)
+![WhatsApp Image 2026-01-29 at 09 17 32](https://github.com/user-attachments/assets/035b822f-d5a8-441b-9d0e-a517e63fc910)
+
+
+## 🚀 Installation & Local Execution
+
 
 ### 🧮 Stage 2: Logic & Graphics
 * Developed the `IMPACT_MULTIPLIERS` dictionary to drive the math.
@@ -133,9 +139,6 @@ I then created a low-fidelity wireframe to map out where the "Turtle," the input
 <img width="1428" height="899" alt="Screenshot 2026-01-29 at 9 11 47 AM" src="https://github.com/user-attachments/assets/17ace38b-c470-4acf-9d12-88c7ee275d23" />
 <img width="1428" height="898" alt="Screenshot 2026-01-29 at 9 12 04 AM" src="https://github.com/user-attachments/assets/e85a988e-773e-4c8e-a052-8be5713fa5e1" />
 <img width="1434" height="492" alt="Screenshot 2026-01-29 at 9 12 22 AM" src="https://github.com/user-attachments/assets/72483d5d-1fad-4b06-b3d3-692e1cc3f372" />
-![WhatsApp Image 2026-01-29 at 09 17 34](https://github.com/user-attachments/assets/7d099d21-b53e-4848-8d19-e145f88aba4a)
-![WhatsApp Image 2026-01-29 at 09 17 32](https://github.com/user-attachments/assets/035b822f-d5a8-441b-9d0e-a517e63fc910)
-
 
 ## 🚀 Installation & Local Execution
 1. **Clone or Download** the project folder.
