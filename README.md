@@ -128,7 +128,13 @@ I then created a low-fidelity wireframe to map out where the "Turtle," the input
 * Deployed to Streamlit Cloud.
 * Verified that `requirements.txt` included `matplotlib` to prevent runtime errors in the cloud environment.
 
----
+
+
+---<img width="281" height="484" alt="Screenshot 2026-01-28 at 9 34 16 AM" src="https://github.com/user-attachments/assets/58eb82f8-3f10-49c1-aa00-e92db7bf545c" />
+<img width="1428" height="899" alt="Screenshot 2026-01-29 at 9 11 47 AM" src="https://github.com/user-attachments/assets/17ace38b-c470-4acf-9d12-88c7ee275d23" />
+<img width="1428" height="898" alt="Screenshot 2026-01-29 at 9 12 04 AM" src="https://github.com/user-attachments/assets/e85a988e-773e-4c8e-a052-8be5713fa5e1" />
+<img width="1434" height="492" alt="Screenshot 2026-01-29 at 9 12 22 AM" src="https://github.com/user-attachments/assets/72483d5d-1fad-4b06-b3d3-692e1cc3f372" />
+
 
 ## 🚀 Installation & Local Execution
 1. **Clone or Download** the project folder.
