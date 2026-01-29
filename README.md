@@ -140,25 +140,49 @@ I then created a low-fidelity wireframe to map out where the "Turtle," the input
 <img width="1428" height="898" alt="Screenshot 2026-01-29 at 9 12 04 AM" src="https://github.com/user-attachments/assets/e85a988e-773e-4c8e-a052-8be5713fa5e1" />
 <img width="1434" height="492" alt="Screenshot 2026-01-29 at 9 12 22 AM" src="https://github.com/user-attachments/assets/72483d5d-1fad-4b06-b3d3-692e1cc3f372" />
 
-## 🔧 Stage 5: Integration & Deployment
+Here is the `README.md` content formatted specifically for the **Integration & Deployment** section, keeping it short and professional.
 
-### Integration Details
-**ShopImpact** integrates Python logic with real-time visualization to create an interactive gamified dashboard.
+---
 
-* **Framework:** Built on **Streamlit** for a responsive, Python-native web interface.
-* **Graphics Engine:** Uses **Matplotlib** & **NumPy** to mathematically render the "Virtual Turtle" avatars (Leaf/Footprint) dynamically, removing the need for static image assets.
-* **Data Persistence:** Utilizes `st.session_state` to maintain user history, unlocked badges, and CO₂ totals across browser interactions.
-* **Analytics:** **Pandas** handles data structuring for the "Purchase History" table and "CO₂ Trend" area charts.
+## 🚀 Stage 5: Integration & Deployment
 
-### 🚀 Deployment Instructions
+The application is deployed on **Streamlit Cloud**, ensuring global accessibility across devices. We manage dependencies via `requirements.txt` to guarantee a consistent runtime environment.
 
-**1. Prerequisites**
-Ensure you have [Python 3.8+](https://www.python.org/downloads/) installed.
+### 🔧 Technology Integration
 
-**2. Local Installation**
-Open your terminal in the project folder and install the required libraries:
+ShopImpact integrates several key Python libraries to create a seamless interactive experience:
+
+* **Streamlit:** Primary framework for the interactive dashboard and real-time UI updates.
+* **Pandas:** Handles data storage, aggregation, and structured data frames for history.
+* **Matplotlib:** Renders the weekly impact charts and the custom "Turtle" avatar.
+* **Datetime:** Manages tracking for streaks and time-based analysis.
+* **Session State:** Persists user data (purchases, badges, streaks) across app interactions.
+
+### 💻 Deployment Instructions
+
+**Prerequisites**
+
+* Python 3.8+
+* pip package manager
+* Active internet connection
+
+**Local Installation**
+Run the following commands in your terminal to set up the project locally:
+
 ```bash
+# 1. Clone the repository
+git clone https://github.com/zeneanand/IDAI102-1000442-ZENE-SOPHIE-ANAND
+
+# 2. Navigate to the project directory
+cd IDAI102-1000442-ZENE-SOPHIE-ANAND-SA
+
+# 3. Install dependencies
 pip install -r requirements.txt
+
+# 4. Run the application
+streamlit run app.py
+
+```
 
 
 
