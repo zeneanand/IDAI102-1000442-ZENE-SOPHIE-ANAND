@@ -2,7 +2,7 @@
 # 🌍 ShopImpact — The Mindful Shopping Companion
 **Student Name:** Zene Sophie Anand
 
-**Student ID:** AN02720
+**Student ID:** 10000442
 
 **Course:** Artificial Intelligence | Python Programming
 
