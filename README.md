@@ -1,4 +1,3 @@
-![WhatsApp Image 2026-01-29 at 09 17 34](https://github.com/user-attachments/assets/e8062715-20b8-4171-aca2-e9dbef7383cb)
 
 # 🌍 ShopImpact — The Mindful Shopping Companion
 **Student Name:** Zene Sophie Anand
